@@ -1,0 +1,196 @@
+version: "4.1"
+name: UART
+type: ARM
+deviceName: null
+packDir: .pack/TexasInstruments/MSPM0GX51X_DFP.1.0.0
+srcDirs: []
+virtualFolder:
+  name: <virtual_root>
+  files: []
+  folders:
+    - name: Source
+      files:
+        - path: startup_mspm0g351x_uvision.s
+        - path: ../ti_msp_dl_config.h
+        - path: ../ti_msp_dl_config.c
+        - path: ../main.c
+        - path: ../project.syscfg
+      folders: []
+dependenceList: []
+outDir: build
+miscInfo:
+  uid: 6e9f1718411cbb50d758b0f70ea8e47d
+targets:
+  Debug:
+    cppPreprocessAttrs:
+      defineList: []
+      incList: []
+      libList: []
+    excludeList: []
+    settings:
+      debugger: cortex-debug
+    toolchain: GCC
+    toolchainConfigMap:
+      GCC:
+        archExtensions: ""
+        cpuType: Cortex-M3
+        floatingPointHardware: none
+        options: ""
+        scatterFilePath: <YOUR_LINKER_SCRIPT>.lds
+        storageLayout:
+          RAM: []
+          ROM: []
+        useCustomScatterFile: true
+    uploadConfigMap:
+      JLink: null
+    uploader: JLink
+  G3519_UART:
+    cppPreprocessAttrs:
+      defineList:
+        - __MSPM0G3519__
+      incList:
+        - .
+        - ..
+        - ../../../../../../source/third_party/CMSIS/Core/Include
+        - ../../../../../../source
+        - ../../../source
+        - ../../../source/third_party/CMSIS/Core/Include
+        - ../../../../../../../TI/CCS2051/mspm0_sdk_2_10_00_04/source
+        - .cmsis/include
+        - RTE/_G3519_UART
+      libList: []
+    excludeList: []
+    settings:
+      debugger: cortex-debug
+    toolchain: AC6
+    toolchainConfigMap:
+      AC6:
+        archExtensions: ""
+        cpuType: Cortex-M0+
+        floatingPointHardware: none
+        options:
+          version: 3
+          afterBuildTasks: []
+          asm-compiler:
+            $use: asm-auto
+          beforeBuildTasks:
+            - name: cmd.exe /C D:\TI\CCS2051\ccs\utils\sysconfig_1.27.1\sysconfig_cli.bat --product "D:\TI\CCS2051\mspm0_sdk_2_10_00_04\.metadata\product.json" --device MSPM0G3519 --package "LQFP-80(PN)" --script "D:\BaiduNetdiskDownload\EVM_V2.0_Material_G3519\02_Demonstration\Experimental_Guide_Code\MyG3519Code\05_1_UART\project.syscfg" --output "D:\BaiduNetdiskDownload\EVM_V2.0_Material_G3519\02_Demonstration\Experimental_Guide_Code\MyG3519Code\05_1_UART\keil"
+              abortAfterFailed: true
+              command: cmd.exe /C D:\TI\CCS2051\ccs\utils\sysconfig_1.27.1\sysconfig_cli.bat --product "D:\TI\CCS2051\mspm0_sdk_2_10_00_04\.metadata\product.json" --device MSPM0G3519 --package "LQFP-80(PN)" --script "D:\BaiduNetdiskDownload\EVM_V2.0_Material_G3519\02_Demonstration\Experimental_Guide_Code\MyG3519Code\05_1_UART\project.syscfg" --output "D:\BaiduNetdiskDownload\EVM_V2.0_Material_G3519\02_Demonstration\Experimental_Guide_Code\MyG3519Code\05_1_UART\keil"
+              disable: false
+              stopBuildAfterFailed: true
+          c/cpp-compiler:
+            language-c: c99
+            language-cpp: c++11
+            one-elf-section-per-function: true
+            optimization: level-2
+            short-enums#wchar: true
+            warnings: misra-compatible
+          global:
+            output-debug-info: enable
+          linker:
+            $outputTaskExcludes:
+              - .bin
+            misc-controls: D:\TI\CCS2051\mspm0_sdk_2_10_00_04\source\ti\driverlib\lib\keil\m0p\mspm0gx51x\driverlib.a
+            output-format: elf
+        scatterFilePath: mspm0g3519.sct
+        storageLayout:
+          RAM:
+            - id: 1
+              isChecked: false
+              mem:
+                size: "0x20000"
+                startAddr: "0x20200000"
+              noInit: false
+              tag: RAM
+            - id: 2
+              isChecked: false
+              mem:
+                size: "0x10000"
+                startAddr: "0x20300000"
+              noInit: false
+              tag: RAM
+            - id: 3
+              isChecked: false
+              mem:
+                size: "0x0"
+                startAddr: "0x0"
+              noInit: false
+              tag: RAM
+            - id: 1
+              isChecked: false
+              mem:
+                size: "0x10000"
+                startAddr: "0x20000000"
+              noInit: false
+              tag: IRAM
+            - id: 2
+              isChecked: false
+              mem:
+                size: "0x10000"
+                startAddr: "0x20100000"
+              noInit: false
+              tag: IRAM
+          ROM:
+            - id: 1
+              isChecked: false
+              isStartup: true
+              mem:
+                size: "0x0"
+                startAddr: "0x0"
+              tag: ROM
+            - id: 2
+              isChecked: false
+              isStartup: false
+              mem:
+                size: "0x0"
+                startAddr: "0x0"
+              tag: ROM
+            - id: 3
+              isChecked: false
+              isStartup: false
+              mem:
+                size: "0x0"
+                startAddr: "0x0"
+              tag: ROM
+            - id: 1
+              isChecked: false
+              isStartup: false
+              mem:
+                size: "0x80000"
+                startAddr: "0x0"
+              tag: IROM
+            - id: 2
+              isChecked: false
+              isStartup: false
+              mem:
+                size: "0x80000"
+                startAddr: "0x400000"
+              tag: IROM
+        useCustomScatterFile: true
+      GCC:
+        archExtensions: ""
+        cpuType: Cortex-M3
+        floatingPointHardware: none
+        options: ""
+        scatterFilePath: <YOUR_LINKER_SCRIPT>.lds
+        storageLayout:
+          RAM: []
+          ROM: []
+        useCustomScatterFile: true
+    uploadConfigMap:
+      JLink:
+        baseAddr: ""
+        bin: ""
+        cpuInfo:
+          cpuName: "null"
+          vendor: "null"
+        otherCmds: ""
+        proType: 1
+        speed: 8000
+      OpenOCD:
+        baseAddr: "0x08000000"
+        bin: ""
+        interface: stlink
+        target: stm32f1x
+    uploader: OpenOCD
