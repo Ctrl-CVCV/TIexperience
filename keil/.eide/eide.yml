@@ -15,6 +15,14 @@ virtualFolder:
         - path: ../ti_msp_dl_config.c
         - path: ../main.c
         - path: ../project.syscfg
+        - path: ../BSP/bsp.h
+      folders: []
+    - name: OLED
+      files:
+        - path: ../BSP/SPI0_OLED/oledfont_bmp.h
+        - path: ../BSP/SPI0_OLED/spi0_oled.c
+        - path: ../BSP/SPI0_OLED/spi0_oled.h
+        - path: ../BSP/SPI0_OLED/spi0_oledfont.h
       folders: []
 dependenceList: []
 outDir: build
@@ -23,14 +31,32 @@ miscInfo:
 targets:
   Debug:
     cppPreprocessAttrs:
-      defineList: []
-      incList: []
+      defineList:
+        - __MSPM0G3519__
+      incList:
+        - .
+        - ..
+        - D:/TI/CCS2051/mspm0_sdk_2_10_00_04/source/third_party/CMSIS/Core/Include
+        - D:/TI/CCS2051/mspm0_sdk_2_10_00_04/source
+        - .cmsis/include
+        - RTE/_G3519_UART
       libList: []
     excludeList: []
     settings:
       debugger: cortex-debug
-    toolchain: GCC
+    toolchain: AC6
     toolchainConfigMap:
+      AC6:
+        archExtensions: ""
+        cpuType: Cortex-M0+
+        floatingPointHardware: none
+        options:
+          version: 3
+        scatterFilePath: mspm0g3519.sct
+        storageLayout:
+          RAM: []
+          ROM: []
+        useCustomScatterFile: true
       GCC:
         archExtensions: ""
         cpuType: Cortex-M3
@@ -59,11 +85,8 @@ targets:
       incList:
         - .
         - ..
-        - ../../../../../../source/third_party/CMSIS/Core/Include
-        - ../../../../../../source
-        - ../../../source
-        - ../../../source/third_party/CMSIS/Core/Include
-        - ../../../../../../../TI/CCS2051/mspm0_sdk_2_10_00_04/source
+        - D:/TI/CCS2051/mspm0_sdk_2_10_00_04/source/third_party/CMSIS/Core/Include
+        - D:/TI/CCS2051/mspm0_sdk_2_10_00_04/source
         - .cmsis/include
         - RTE/_G3519_UART
       libList: []
@@ -85,8 +108,8 @@ targets:
             - name: cmd.exe /C D:\TI\CCS2051\ccs\utils\sysconfig_1.27.1\sysconfig_cli.bat --product "D:\TI\CCS2051\mspm0_sdk_2_10_00_04\.metadata\product.json" --device MSPM0G3519 --package "LQFP-80(PN)" --script "D:\BaiduNetdiskDownload\EVM_V2.0_Material_G3519\02_Demonstration\Experimental_Guide_Code\MyG3519Code\05_1_UART\project.syscfg" --output "D:\BaiduNetdiskDownload\EVM_V2.0_Material_G3519\02_Demonstration\Experimental_Guide_Code\MyG3519Code\05_1_UART\keil"
               abortAfterFailed: true
               command: cmd.exe /C D:\TI\CCS2051\ccs\utils\sysconfig_1.27.1\sysconfig_cli.bat --product "D:\TI\CCS2051\mspm0_sdk_2_10_00_04\.metadata\product.json" --device MSPM0G3519 --package "LQFP-80(PN)" --script "D:\BaiduNetdiskDownload\EVM_V2.0_Material_G3519\02_Demonstration\Experimental_Guide_Code\MyG3519Code\05_1_UART\project.syscfg" --output "D:\BaiduNetdiskDownload\EVM_V2.0_Material_G3519\02_Demonstration\Experimental_Guide_Code\MyG3519Code\05_1_UART\keil"
-              disable: false
-              stopBuildAfterFailed: true
+              disable: true
+              stopBuildAfterFailed: false
           c/cpp-compiler:
             language-c: c99
             language-cpp: c++11

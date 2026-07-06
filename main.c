@@ -32,9 +32,10 @@
 
 
 /*
- * 串口收发实验，上位机串口助手向单片机串口1发送消息，单片机将收到的消息返回上位机。（波特率9600）
+ * 锟斤拷锟斤拷锟秸凤拷实锟介，锟斤拷位锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷片锟斤拷锟斤拷锟斤拷1锟斤拷锟斤拷锟斤拷息锟斤拷锟斤拷片锟斤拷锟斤拷锟秸碉拷锟斤拷锟斤拷息锟斤拷锟斤拷锟斤拷位锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷9600锟斤拷
  */
 #include "ti_msp_dl_config.h"
+#include "BSP/bsp.h"
 
 void UART_0_INST_IRQHandler(void)
 {
@@ -50,6 +51,12 @@ int main(void)
 {
 
     SYSCFG_DL_init();
+    OLED_Init();
+    OLED_Clear();
+    OLED_ShowString(0, 0, (u8 *)"Hello OLED!");
+    OLED_ShowString(0, 2, (u8 *)"MSPM0G3519");
+    OLED_ShowString(0, 4, (u8 *)"SPI Test OK");
+
     NVIC_DisableIRQ(UART_0_INST_INT_IRQN);
     NVIC_EnableIRQ(UART_0_INST_INT_IRQN);
     while (1)

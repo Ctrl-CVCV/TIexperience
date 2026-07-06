@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright (c) 2023, Texas Instruments Incorporated
  * All rights reserved.
  *
@@ -40,6 +40,8 @@
 
 #include "ti_msp_dl_config.h"
 
+DL_SPI_backupConfig gSPI_0Backup;
+
 /*
  *  ======== SYSCFG_DL_init ========
  *  Perform any initialization needed before using any board APIs
@@ -51,6 +53,7 @@ SYSCONFIG_WEAK void SYSCFG_DL_init(void)
     /* Module-Specific Initializations*/
     SYSCFG_DL_SYSCTL_init();
     SYSCFG_DL_UART_0_init();
+    SYSCFG_DL_SPI_0_init();
 }
 
 
@@ -61,11 +64,13 @@ SYSCONFIG_WEAK void SYSCFG_DL_initPower(void)
     DL_GPIO_reset(GPIOB);
     DL_GPIO_reset(GPIOC);
     DL_UART_Main_reset(UART_0_INST);
+    DL_SPI_reset(SPI_0_INST);
 
     DL_GPIO_enablePower(GPIOA);
     DL_GPIO_enablePower(GPIOB);
     DL_GPIO_enablePower(GPIOC);
     DL_UART_Main_enablePower(UART_0_INST);
+    DL_SPI_enablePower(SPI_0_INST);
     delay_cycles(POWER_STARTUP_DELAY);
 }
 
@@ -76,6 +81,11 @@ SYSCONFIG_WEAK void SYSCFG_DL_GPIO_init(void)
         GPIO_UART_0_IOMUX_TX, GPIO_UART_0_IOMUX_TX_FUNC);
     DL_GPIO_initPeripheralInputFunction(
         GPIO_UART_0_IOMUX_RX, GPIO_UART_0_IOMUX_RX_FUNC);
+
+    DL_GPIO_initPeripheralOutputFunction(
+        GPIO_SPI_0_IOMUX_SCLK, GPIO_SPI_0_IOMUX_SCLK_FUNC);
+    DL_GPIO_initPeripheralOutputFunction(
+        GPIO_SPI_0_IOMUX_PICO, GPIO_SPI_0_IOMUX_PICO_FUNC);
 
     DL_GPIO_initDigitalInputFeatures(Key_User_IOMUX,
 		 DL_GPIO_INVERSION_DISABLE, DL_GPIO_RESISTOR_PULL_UP,
@@ -89,27 +99,62 @@ SYSCONFIG_WEAK void SYSCFG_DL_GPIO_init(void)
 		 DL_GPIO_INVERSION_DISABLE, DL_GPIO_RESISTOR_PULL_UP,
 		 DL_GPIO_DRIVE_STRENGTH_LOW, DL_GPIO_HIZ_DISABLE);
 
+    DL_GPIO_initDigitalOutput(OLED_RES_IOMUX);
+    DL_GPIO_initDigitalOutput(OLED_DC_IOMUX);
+    DL_GPIO_initDigitalOutputFeatures(OLED_CS_IOMUX,
+         DL_GPIO_INVERSION_DISABLE, DL_GPIO_RESISTOR_PULL_UP,
+         DL_GPIO_DRIVE_STRENGTH_LOW, DL_GPIO_HIZ_DISABLE);
+
     DL_GPIO_clearPins(LED_PORT, LED_L2_PIN |
 		LED_L1_PIN);
     DL_GPIO_enableOutput(LED_PORT, LED_L2_PIN |
 		LED_L1_PIN);
+    DL_GPIO_clearPins(GPIOB, OLED_RES_PIN);
+    DL_GPIO_enableOutput(GPIOB, OLED_RES_PIN);
+    DL_GPIO_clearPins(GPIOC, OLED_DC_PIN |
+         OLED_CS_PIN);
+    DL_GPIO_enableOutput(GPIOC, OLED_DC_PIN |
+         OLED_CS_PIN);
 
 }
 
 
 
+/*
+ * SYSPLL: SYSOSC(32MHz) * 5(Q=5) / 1(P=1) = 160MHz VCO
+ * CLK0 = VCO / (2*(rDivClk0+1)) = 160MHz / 2 = 80MHz
+ * MCLK = CLK0 = 80MHz
+ */
+static const DL_SYSCTL_SYSPLLConfig gSYSPLLConfig = {
+    .inputFreq   = DL_SYSCTL_SYSPLL_INPUT_FREQ_32_48_MHZ,
+    .rDivClk2x   = 0,
+    .rDivClk1    = 0,
+    .rDivClk0    = 0,
+    .enableCLK2x = DL_SYSCTL_SYSPLL_CLK2X_DISABLE,
+    .enableCLK1  = DL_SYSCTL_SYSPLL_CLK1_DISABLE,
+    .enableCLK0  = DL_SYSCTL_SYSPLL_CLK0_ENABLE,
+    .sysPLLMCLK  = DL_SYSCTL_SYSPLL_MCLK_CLK0,
+    .sysPLLRef   = DL_SYSCTL_SYSPLL_REF_SYSOSC,
+    .qDiv        = 4,
+    .pDiv        = DL_SYSCTL_SYSPLL_PDIV_1
+};
+
 SYSCONFIG_WEAK void SYSCFG_DL_SYSCTL_init(void)
 {
-
-	//Low Power Mode is configured to be SLEEP0
     DL_SYSCTL_setBORThreshold(DL_SYSCTL_BOR_THRESHOLD_LEVEL_0);
+    DL_SYSCTL_setSYSOSCFreq(DL_SYSCTL_SYSOSC_FREQ_BASE);
+    DL_SYSCTL_disableHFXT();
 
-    
-	DL_SYSCTL_setSYSOSCFreq(DL_SYSCTL_SYSOSC_FREQ_BASE);
-	/* Set default configuration */
-	DL_SYSCTL_disableHFXT();
-	DL_SYSCTL_disableSYSPLL();
+    /* 2 wait states required for 80MHz */
+    DL_SYSCTL_setFlashWaitState(DL_SYSCTL_FLASH_WAIT_STATE_2);
 
+    DL_SYSCTL_configSYSPLL((DL_SYSCTL_SYSPLLConfig *) &gSYSPLLConfig);
+
+    /* ULPCLK = MCLK / 2 = 40MHz (max for ULPCLK is 40MHz) */
+    DL_SYSCTL_setULPCLKDivider(DL_SYSCTL_ULPCLK_DIV_2);
+
+    /* Switch MCLK from SYSOSC to HSCLK (SYSPLL) */
+    DL_SYSCTL_setMCLKSource(SYSOSC, HSCLK, DL_SYSCTL_HSCLK_SOURCE_SYSPLL);
 }
 
 
@@ -133,12 +178,10 @@ SYSCONFIG_WEAK void SYSCFG_DL_UART_0_init(void)
 
     DL_UART_Main_init(UART_0_INST, (DL_UART_Main_Config *) &gUART_0Config);
     /*
-     * Configure baud rate by setting oversampling and baud rate divisors.
-     *  Target baud rate: 9600
-     *  Actual baud rate: 9600.24
+     * Configure baud rate by setting oversampling and baud rate divisors.*     * Target baud rate: 9600     * Actual baud rate: 9600.14
      */
     DL_UART_Main_setOversampling(UART_0_INST, DL_UART_OVERSAMPLING_RATE_16X);
-    DL_UART_Main_setBaudRateDivisor(UART_0_INST, UART_0_IBRD_32_MHZ_9600_BAUD, UART_0_FBRD_32_MHZ_9600_BAUD);
+    DL_UART_Main_setBaudRateDivisor(UART_0_INST, UART_0_IBRD_80_MHZ_9600_BAUD, UART_0_FBRD_80_MHZ_9600_BAUD);
 
 
     /* Configure Interrupts */
@@ -149,3 +192,34 @@ SYSCONFIG_WEAK void SYSCFG_DL_UART_0_init(void)
     DL_UART_Main_enable(UART_0_INST);
 }
 
+
+static const DL_SPI_Config gSPI_0_config = {
+    .mode        = DL_SPI_MODE_CONTROLLER,
+    .frameFormat = DL_SPI_FRAME_FORMAT_MOTO3_POL1_PHA1,
+    .parity      = DL_SPI_PARITY_NONE,
+    .dataSize    = DL_SPI_DATA_SIZE_8,
+    .bitOrder    = DL_SPI_BIT_ORDER_MSB_FIRST,
+};
+
+static const DL_SPI_ClockConfig gSPI_0_clockConfig = {
+    .clockSel    = DL_SPI_CLOCK_BUSCLK,
+    .divideRatio = DL_SPI_CLOCK_DIVIDE_RATIO_1
+};
+
+SYSCONFIG_WEAK void SYSCFG_DL_SPI_0_init(void) {
+    DL_SPI_setClockConfig(SPI_0_INST, (DL_SPI_ClockConfig *) &gSPI_0_clockConfig);
+
+    DL_SPI_init(SPI_0_INST, (DL_SPI_Config *) &gSPI_0_config);
+
+    /*
+     * Set the bit rate clock divider to generate the serial output clock
+     *     outputBitRate = (spiInputClock) / ((1 + SCR) * 2)
+     *     20000000 = (80000000)/((1 + 1) * 2)
+     */
+    DL_SPI_setBitRateSerialClockDivider(SPI_0_INST, 1);
+    /* Set RX and TX FIFO threshold levels */
+    DL_SPI_setFIFOThreshold(SPI_0_INST, DL_SPI_RX_FIFO_LEVEL_1_2_FULL, DL_SPI_TX_FIFO_LEVEL_1_2_EMPTY);
+
+    /* Enable module */
+    DL_SPI_enable(SPI_0_INST);
+}

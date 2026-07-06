@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright (c) 2023, Texas Instruments Incorporated - http://www.ti.com
  * All rights reserved.
  *
@@ -74,13 +74,13 @@ extern "C" {
 
 
 
-#define CPUCLK_FREQ                                                     32000000
+#define CPUCLK_FREQ                                                     80000000
 
 
 
 /* Defines for UART_0 */
 #define UART_0_INST                                                        UART0
-#define UART_0_INST_FREQUENCY                                           32000000
+#define UART_0_INST_FREQUENCY                                           80000000
 #define UART_0_INST_IRQHandler                                  UART0_IRQHandler
 #define UART_0_INST_INT_IRQN                                      UART0_INT_IRQn
 #define GPIO_UART_0_RX_PORT                                                GPIOA
@@ -92,10 +92,34 @@ extern "C" {
 #define GPIO_UART_0_IOMUX_RX_FUNC                      IOMUX_PINCM22_PF_UART0_RX
 #define GPIO_UART_0_IOMUX_TX_FUNC                      IOMUX_PINCM21_PF_UART0_TX
 #define UART_0_BAUD_RATE                                                  (9600)
-#define UART_0_IBRD_32_MHZ_9600_BAUD                                       (208)
-#define UART_0_FBRD_32_MHZ_9600_BAUD                                        (21)
+#define UART_0_IBRD_80_MHZ_9600_BAUD                                       (520)
+#define UART_0_FBRD_80_MHZ_9600_BAUD                                        (53)
 
+/* Defines for SPI_0 */
+#define SPI_0_INST                                                         SPI0
+#define SPI_0_INST_IRQHandler                                   SPI0_IRQHandler
+#define SPI_0_INST_INT_IRQN                                       SPI0_INT_IRQn
+#define GPIO_SPI_0_PICO_PORT                                              GPIOB
+#define GPIO_SPI_0_PICO_PIN                                       DL_GPIO_PIN_2
+#define GPIO_SPI_0_IOMUX_PICO                                   (IOMUX_PINCM15)
+#define GPIO_SPI_0_IOMUX_PICO_FUNC                   IOMUX_PINCM15_PF_SPI0_PICO
+#define GPIO_SPI_0_SCLK_PORT                                              GPIOB
+#define GPIO_SPI_0_SCLK_PIN                                       DL_GPIO_PIN_3
+#define GPIO_SPI_0_IOMUX_SCLK                                   (IOMUX_PINCM16)
+#define GPIO_SPI_0_IOMUX_SCLK_FUNC                   IOMUX_PINCM16_PF_SPI0_SCLK
 
+/* Defines for OLED_RES: GPIOB.23 */
+#define OLED_RES_PORT                                                    (GPIOB)
+#define OLED_RES_PIN                                            (DL_GPIO_PIN_23)
+#define OLED_RES_IOMUX                                           (IOMUX_PINCM51)
+/* Defines for OLED_DC: GPIOC.8 */
+#define OLED_DC_PORT                                                     (GPIOC)
+#define OLED_DC_PIN                                              (DL_GPIO_PIN_8)
+#define OLED_DC_IOMUX                                            (IOMUX_PINCM86)
+/* Defines for OLED_CS: GPIOC.9 */
+#define OLED_CS_PORT                                                     (GPIOC)
+#define OLED_CS_PIN                                              (DL_GPIO_PIN_9)
+#define OLED_CS_IOMUX                                            (IOMUX_PINCM87)
 
 
 
@@ -123,6 +147,7 @@ void SYSCFG_DL_initPower(void);
 void SYSCFG_DL_GPIO_init(void);
 void SYSCFG_DL_SYSCTL_init(void);
 void SYSCFG_DL_UART_0_init(void);
+void SYSCFG_DL_SPI_0_init(void);
 
 
 bool SYSCFG_DL_saveConfiguration(void);
