@@ -1,7 +1,7 @@
 version: "4.1"
 name: UART
 type: ARM
-deviceName: null
+deviceName: MSPM0G3519
 packDir: .pack/TexasInstruments/MSPM0GX51X_DFP.1.0.0
 srcDirs: []
 virtualFolder:
@@ -42,7 +42,15 @@ targets:
           ROM: []
         useCustomScatterFile: true
     uploadConfigMap:
-      JLink: null
+      JLink:
+        baseAddr: "0x0"
+        bin: ""
+        cpuInfo:
+          cpuName: MSPM0G3519
+          vendor: Texas Instruments
+        otherCmds: ""
+        proType: 1
+        speed: 8000
     uploader: JLink
   G3519_UART:
     cppPreprocessAttrs:
@@ -180,17 +188,24 @@ targets:
         useCustomScatterFile: true
     uploadConfigMap:
       JLink:
-        baseAddr: ""
+        baseAddr: "0x0"
         bin: ""
         cpuInfo:
-          cpuName: "null"
-          vendor: "null"
+          cpuName: MSPM0G3519
+          vendor: Texas Instruments
         otherCmds: ""
         proType: 1
         speed: 8000
       OpenOCD:
-        baseAddr: "0x08000000"
+        baseAddr: "0x0"
         bin: ""
-        interface: stlink
-        target: stm32f1x
-    uploader: OpenOCD
+        interface: cmsis-dap-v1
+        target: ti/mspm0.cfg
+      pyOCD:
+        baseAddr: "0x0"
+        bin: ""
+        config: .eide/g3519_uart.pyocd.yaml
+        otherCmds: "--connect=under-reset"
+        speed: 1M
+        targetName: mspm0g3519
+    uploader: pyOCD

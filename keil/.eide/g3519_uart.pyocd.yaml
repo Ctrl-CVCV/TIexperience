@@ -1,0 +1,11 @@
+# pyOCD config for MSPM0G3519 via CMSIS-DAP
+target_override: mspm0g3519
+
+# 连接超时设置 (ms)
+connect_timeout: 10000
+
+# 频率设置
+frequency: 1000000
+
+# CMSIS-DAP 配置
+dap_protocol: swd
