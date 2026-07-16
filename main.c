@@ -1,70 +1,112 @@
 /*
- * Copyright (c) 2021, Texas Instruments Incorporated
- * All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met:
- *
- * *  Redistributions of source code must retain the above copyright
- *    notice, this list of conditions and the following disclaimer.
- *
- * *  Redistributions in binary form must reproduce the above copyright
- *    notice, this list of conditions and the following disclaimer in the
- *    documentation and/or other materials provided with the distribution.
- *
- * *  Neither the name of Texas Instruments Incorporated nor the names of
- *    its contributors may be used to endorse or promote products derived
- *    from this software without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
- * THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
- * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
- * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
- * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
- * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
- * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
- * EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * Dual Motor Speed Control (PID @ 200Hz)
+ * --- Tune parameters below ---
  */
 
-
-/*
- * �����շ�ʵ�飬��λ������������Ƭ������1������Ϣ����Ƭ�����յ�����Ϣ������λ������������9600��
- */
 #include "ti_msp_dl_config.h"
-#include "BSP/bsp.h"
+#include "BSP/Motor/motor.h"
+#include "BSP/Encoder/encoder.h"
+#include "BSP/Encoder/pid.h"
+#include "BSP/UART_DMA/uart_dma.h"
 
-void UART_0_INST_IRQHandler(void)
+/* ========== PID Parameters (TUNE HERE) ========== */
+#define PID_A_KP   0.00f   /* Motor A disabled for now — testing Motor B */
+#define PID_A_KI   0.0f
+#define PID_A_KD   0.000f
+
+#define PID_B_KP   1.0f
+#define PID_B_KI   0.52f
+#define PID_B_KD   0.00f  /* small D: damps mechanical resonance */
+
+/* ========== Speed Setpoints (Target RPM, motor shaft) ========== */
+volatile int16_t g_setpoint_a = 2000;   /* Motor A target RPM */
+volatile int16_t g_setpoint_b = 2000;   /* Motor B target RPM */
+
+/* ========== Internals ========== */
+volatile uint32_t nowtime;              /* IMU.o reference */
+volatile bool     g_ctrl_tick = false;  /* set by TIMER_7 ISR, consumed by main loop */
+static PID_Controller g_pid_a, g_pid_b;
+static float g_pwm_a, g_pwm_b;   /* float accumulation, no truncation */
+static char   g_msg[80];
+static const float g_dt = 0.005f;       /* 200Hz = 5ms */
+
+/* ---- itoa helper (no padding) ---- */
+static char *itoa(char *dst, int16_t val)
 {
-    uint8_t res;
-    if (DL_UART_getPendingInterrupt(UART0) == DL_UART_MAIN_IIDX_RX)
-    {
-        res = DL_UART_receiveData(UART0);
-        DL_UART_Main_transmitData(UART0, res);
+    uint16_t u; char tmp[8]; int i = 0, j;
+    if (val < 0) { *dst++ = '-'; u = (uint16_t)(-val); }
+    else         { u = (uint16_t)val; }
+    if (u == 0) tmp[i++] = '0';
+    while (u) { tmp[i++] = (char)('0' + (u % 10)); u /= 10; }
+    for (j = i - 1; j >= 0; j--) *dst++ = tmp[j];
+    return dst;
+}
+
+/* ---- TIMER_7 ISR: only set flag, no heavy work ---- */
+void TIMER_7_INST_IRQHandler(void)
+{
+    switch (DL_TimerG_getPendingInterrupt(TIMER_7_INST)) {
+    case DL_TIMER_IIDX_ZERO:
+        DL_TimerG_clearInterruptStatus(TIMER_7_INST,
+            DL_TIMERG_INTERRUPT_ZERO_EVENT);
+        g_ctrl_tick = true;
+        break;
+    default: break;
     }
 }
 
+/* ---- Main ---- */
 int main(void)
 {
+    int16_t rpm_a, rpm_b;
+    char   *p;
 
     SYSCFG_DL_init();
-    OLED_Init();
-    OLED_Clear();
-    OLED_ShowString(0, 0, (u8 *)"Hello OLED!");
-    OLED_ShowString(0, 2, (u8 *)"MSPM0G3519");
-    OLED_ShowString(0, 4, (u8 *)"SPI Test OK");
+    motor_init();
+    encoder_init();
+    uart_dma_init();
 
-    NVIC_DisableIRQ(UART_0_INST_INT_IRQN);
-    NVIC_EnableIRQ(UART_0_INST_INT_IRQN);
-    while (1)
+    /* Init PIDs */
+    PID_Init(&g_pid_a, PID_A_KP, PID_A_KI, PID_A_KD, (float)MOTOR_SPEED_MAX);
+    PID_Init(&g_pid_b, PID_B_KP, PID_B_KI, PID_B_KD, 600.0f);  /* output limit = 600, per ref */
+
+    /* Set up TIMER_7 for periodic 200Hz (5ms)
+     * TIMER_7 clk = 80MHz/8 = 10MHz. period = 0.005*10M-1 = 49999 */
     {
+        DL_TimerG_TimerConfig cfg = {
+            .period    = 49999,
+            .timerMode = DL_TIMER_TIMER_MODE_PERIODIC,
+            .startTimer = DL_TIMER_START,
+        };
+        DL_TimerG_initTimerMode(TIMER_7_INST, &cfg);
+        DL_TimerG_enableInterrupt(TIMER_7_INST, DL_TIMERG_INTERRUPT_ZERO_EVENT);
+        NVIC_SetPriority(TIMER_7_INST_INT_IRQN, 2);
+        NVIC_EnableIRQ(TIMER_7_INST_INT_IRQN);
+    }
 
-        if (DL_GPIO_readPins(Key_PORT, Key_User_PIN) == 0)
-            DL_GPIO_setPins(GPIOA, LED_L1_PIN);
-        else
-            DL_GPIO_clearPins(GPIOA, LED_L1_PIN);
+    while (1) {
+        /* Wait for next 200Hz tick */
+        while (!g_ctrl_tick) { /* spin */ }
+        g_ctrl_tick = false;
+
+        rpm_a = encoder_b_get_rpm_filt();  /* QEI_1 → Motor A */
+        rpm_b = encoder_a_get_rpm_filt();  /* QEI_0 → Motor B */
+
+        /* Positional PID: output = Kp*error + Ki*∫error - Kd*dRPM/dt */
+        g_pwm_a = PID_Update(&g_pid_a, (float)g_setpoint_a, (float)rpm_a, g_dt);
+        g_pwm_b = PID_Update(&g_pid_b, (float)g_setpoint_b, (float)rpm_b, g_dt);
+
+        motor_a_run((int16_t)g_pwm_a);
+        motor_b_run((int16_t)g_pwm_b);
+
+        /* UART telemetry: rpm,pwm */
+        if (!uart_dma_is_busy()) {
+            p = g_msg;
+            p = itoa(p, rpm_b);
+            *p++ = ',';
+            p = itoa(p, (int16_t)g_pwm_b);
+            *p++ = '\n';
+            uart_dma_send((const uint8_t *)g_msg, (uint16_t)(p - g_msg));
+        }
     }
 }

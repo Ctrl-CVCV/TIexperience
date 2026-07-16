@@ -24,8 +24,16 @@ static inline void delay_ms(uint32_t ms)
     }
 }
 
+static inline void delay_us(uint32_t us)
+{
+    while (us--) {
+        delay_cycles(CPUCLK_FREQ_MHZ);
+    }
+}
+
 /******************鐢ㄦ埛鑷畾涔夊ご鏂囦欢*********/
 #include "SPI0_OLED/spi0_oled.h"
+#include "SPI1/spi1.h"
 /*******************************************/
 
 #endif

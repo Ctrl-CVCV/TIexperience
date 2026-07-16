@@ -24,6 +24,28 @@ virtualFolder:
         - path: ../BSP/SPI0_OLED/spi0_oled.h
         - path: ../BSP/SPI0_OLED/spi0_oledfont.h
       folders: []
+    - name: IMU
+      files:
+        - path: ../BSP/SPI1/spi1.c
+        - path: ../BSP/SPI1/spi1.h
+        - path: ../BSP/IMU/basic_read_reg.c
+        - path: ../BSP/IMU/ICM45686/inv_imu_transport.c
+        - path: ../BSP/IMU/ICM45686/inv_imu_driver.c
+        - path: ../BSP/IMU/AHRS/IMU.c
+      folders: []
+    - name: Motor
+      files:
+        - path: ../BSP/Motor/motor.c
+      folders: []
+    - name: UART_DMA
+      files:
+        - path: ../BSP/UART_DMA/uart_dma.c
+      folders: []
+    - name: Encoder
+      files:
+        - path: ../BSP/Encoder/encoder.c
+        - path: ../BSP/Encoder/pid.c
+      folders: []
 dependenceList: []
 outDir: build
 miscInfo:
@@ -89,7 +111,11 @@ targets:
         - D:/TI/CCS2051/mspm0_sdk_2_10_00_04/source
         - .cmsis/include
         - RTE/_G3519_UART
-      libList: []
+        - ../BSP/IMU
+        - ../BSP/IMU/AHRS
+      libList:
+        - ../BSP/IMU/AHRS
+        - ../BSP/IMU/ICM45686
     excludeList: []
     settings:
       debugger: cortex-debug
@@ -105,11 +131,11 @@ targets:
           asm-compiler:
             $use: asm-auto
           beforeBuildTasks:
-            - name: cmd.exe /C D:\TI\CCS2051\ccs\utils\sysconfig_1.27.1\sysconfig_cli.bat --product "D:\TI\CCS2051\mspm0_sdk_2_10_00_04\.metadata\product.json" --device MSPM0G3519 --package "LQFP-80(PN)" --script "D:\BaiduNetdiskDownload\EVM_V2.0_Material_G3519\02_Demonstration\Experimental_Guide_Code\MyG3519Code\05_1_UART\project.syscfg" --output "D:\BaiduNetdiskDownload\EVM_V2.0_Material_G3519\02_Demonstration\Experimental_Guide_Code\MyG3519Code\05_1_UART\keil"
+            - name: SysConfig
               abortAfterFailed: true
-              command: cmd.exe /C D:\TI\CCS2051\ccs\utils\sysconfig_1.27.1\sysconfig_cli.bat --product "D:\TI\CCS2051\mspm0_sdk_2_10_00_04\.metadata\product.json" --device MSPM0G3519 --package "LQFP-80(PN)" --script "D:\BaiduNetdiskDownload\EVM_V2.0_Material_G3519\02_Demonstration\Experimental_Guide_Code\MyG3519Code\05_1_UART\project.syscfg" --output "D:\BaiduNetdiskDownload\EVM_V2.0_Material_G3519\02_Demonstration\Experimental_Guide_Code\MyG3519Code\05_1_UART\keil"
-              disable: true
-              stopBuildAfterFailed: false
+              command: cmd.exe /C D:\TI\CCS2051\ccs\utils\sysconfig_1.27.1\sysconfig_cli.bat --product "D:\TI\CCS2051\mspm0_sdk_2_10_00_04\.metadata\product.json" --device MSPM0G3519 --package "LQFP-80(PN)" --script "F:\05_1_UART\project.syscfg" --output "F:\05_1_UART"
+              disable: false
+              stopBuildAfterFailed: true
           c/cpp-compiler:
             language-c: c99
             language-cpp: c++11
@@ -228,7 +254,7 @@ targets:
         baseAddr: "0x0"
         bin: ""
         config: .eide/g3519_uart.pyocd.yaml
-        otherCmds: "--connect=under-reset"
+        otherCmds: --connect=under-reset
         speed: 1M
         targetName: mspm0g3519
     uploader: pyOCD

@@ -57,7 +57,7 @@ void OLED_WR_Byte(u8 dat, u8 cmd)
     //		dat <<= 1;
     //	}
     DL_SPI_transmitData8(SPI_0_INST, dat);
-    delay_cycles(30);
+    while (DL_SPI_isBusy(SPI_0_INST)) {}
     OLED_CS_Set();
     OLED_DC_Set();
 }
