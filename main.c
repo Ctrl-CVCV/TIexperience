@@ -1,5 +1,5 @@
 /*
- * Dual Motor Speed Control (PID @ 200Hz)
+ * DRV8874 Motor Speed Control (PID @ 200Hz)
  * --- Tune parameters below ---
  */
 
@@ -10,23 +10,18 @@
 #include "BSP/UART_DMA/uart_dma.h"
 
 /* ========== PID Parameters (TUNE HERE) ========== */
-#define PID_A_KP   0.00f   /* Motor A disabled for now — testing Motor B */
-#define PID_A_KI   0.0f
-#define PID_A_KD   0.000f
+#define PID_KP   0.50f
+#define PID_KI   0.26f
+#define PID_KD   0.00f
 
-#define PID_B_KP   1.0f
-#define PID_B_KI   0.52f
-#define PID_B_KD   0.00f  /* small D: damps mechanical resonance */
-
-/* ========== Speed Setpoints (Target RPM, motor shaft) ========== */
-volatile int16_t g_setpoint_a = 2000;   /* Motor A target RPM */
-volatile int16_t g_setpoint_b = 2000;   /* Motor B target RPM */
+/* ========== Speed Setpoint (Target RPM, motor shaft) ========== */
+volatile int16_t g_setpoint = 2000;
 
 /* ========== Internals ========== */
-volatile uint32_t nowtime;              /* IMU.o reference */
-volatile bool     g_ctrl_tick = false;  /* set by TIMER_7 ISR, consumed by main loop */
-static PID_Controller g_pid_a, g_pid_b;
-static float g_pwm_a, g_pwm_b;   /* float accumulation, no truncation */
+volatile uint32_t nowtime;              /* referenced by pid.c */
+volatile bool     g_ctrl_tick = false;
+static PID_Controller g_pid;
+static float g_pwm;
 static char   g_msg[80];
 static const float g_dt = 0.005f;       /* 200Hz = 5ms */
 
@@ -58,7 +53,7 @@ void TIMER_7_INST_IRQHandler(void)
 /* ---- Main ---- */
 int main(void)
 {
-    int16_t rpm_a, rpm_b;
+    int16_t rpm;
     char   *p;
 
     SYSCFG_DL_init();
@@ -66,12 +61,10 @@ int main(void)
     encoder_init();
     uart_dma_init();
 
-    /* Init PIDs */
-    PID_Init(&g_pid_a, PID_A_KP, PID_A_KI, PID_A_KD, (float)MOTOR_SPEED_MAX);
-    PID_Init(&g_pid_b, PID_B_KP, PID_B_KI, PID_B_KD, 600.0f);  /* output limit = 600, per ref */
+    /* Init PID */
+    PID_Init(&g_pid, PID_KP, PID_KI, PID_KD, 600.0f);
 
-    /* Set up TIMER_7 for periodic 200Hz (5ms)
-     * TIMER_7 clk = 80MHz/8 = 10MHz. period = 0.005*10M-1 = 49999 */
+    /* Set up TIMER_7 for periodic 200Hz */
     {
         DL_TimerG_TimerConfig cfg = {
             .period    = 49999,
@@ -85,26 +78,22 @@ int main(void)
     }
 
     while (1) {
-        /* Wait for next 200Hz tick */
         while (!g_ctrl_tick) { /* spin */ }
         g_ctrl_tick = false;
 
-        rpm_a = encoder_b_get_rpm_filt();  /* QEI_1 → Motor A */
-        rpm_b = encoder_a_get_rpm_filt();  /* QEI_0 → Motor B */
+        rpm = encoder_a_get_rpm_filt();  /* QEI_0 */
 
-        /* Positional PID: output = Kp*error + Ki*∫error - Kd*dRPM/dt */
-        g_pwm_a = PID_Update(&g_pid_a, (float)g_setpoint_a, (float)rpm_a, g_dt);
-        g_pwm_b = PID_Update(&g_pid_b, (float)g_setpoint_b, (float)rpm_b, g_dt);
+        /* ---- Fixed PWM test — change value here ---- */
+        g_pwm = 500;  /* test with higher duty */
+        /* ---- PID mode — uncomment below and comment above ---- */
+        // g_pwm = PID_Update(&g_pid, (float)g_setpoint, (float)rpm, g_dt);
 
-        motor_a_run((int16_t)g_pwm_a);
-        motor_b_run((int16_t)g_pwm_b);
+        motor_run((int16_t)g_pwm);
 
-        /* UART telemetry: rpm,pwm */
+        /* UART: rpm only */
         if (!uart_dma_is_busy()) {
             p = g_msg;
-            p = itoa(p, rpm_b);
-            *p++ = ',';
-            p = itoa(p, (int16_t)g_pwm_b);
+            p = itoa(p, rpm);
             *p++ = '\n';
             uart_dma_send((const uint8_t *)g_msg, (uint16_t)(p - g_msg));
         }

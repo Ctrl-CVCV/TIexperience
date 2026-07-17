@@ -85,23 +85,23 @@ extern "C" {
 bool SYSCFG_DL_SYSCTL_SYSPLL_init(void);
 
 
-/* Defines for PWMA */
-#define PWMA_INST                                                          TIMA1
-#define PWMA_INST_IRQHandler                                    TIMA1_IRQHandler
-#define PWMA_INST_INT_IRQN                                      (TIMA1_INT_IRQn)
-#define PWMA_INST_CLK_FREQ                                              80000000
+/* Defines for MOTOR1_PWM */
+#define MOTOR1_PWM_INST                                                    TIMG6
+#define MOTOR1_PWM_INST_IRQHandler                              TIMG6_IRQHandler
+#define MOTOR1_PWM_INST_INT_IRQN                                (TIMG6_INT_IRQn)
+#define MOTOR1_PWM_INST_CLK_FREQ                                        80000000
 /* GPIO defines for channel 0 */
-#define GPIO_PWMA_C0_PORT                                                  GPIOA
-#define GPIO_PWMA_C0_PIN                                          DL_GPIO_PIN_28
-#define GPIO_PWMA_C0_IOMUX                                        (IOMUX_PINCM3)
-#define GPIO_PWMA_C0_IOMUX_FUNC                       IOMUX_PINCM3_PF_TIMA1_CCP0
-#define GPIO_PWMA_C0_IDX                                     DL_TIMER_CC_0_INDEX
+#define GPIO_MOTOR1_PWM_C0_PORT                                            GPIOA
+#define GPIO_MOTOR1_PWM_C0_PIN                                    DL_GPIO_PIN_29
+#define GPIO_MOTOR1_PWM_C0_IOMUX                                  (IOMUX_PINCM4)
+#define GPIO_MOTOR1_PWM_C0_IOMUX_FUNC                 IOMUX_PINCM4_PF_TIMG6_CCP0
+#define GPIO_MOTOR1_PWM_C0_IDX                               DL_TIMER_CC_0_INDEX
 /* GPIO defines for channel 1 */
-#define GPIO_PWMA_C1_PORT                                                  GPIOA
-#define GPIO_PWMA_C1_PIN                                          DL_GPIO_PIN_31
-#define GPIO_PWMA_C1_IOMUX                                        (IOMUX_PINCM6)
-#define GPIO_PWMA_C1_IOMUX_FUNC                       IOMUX_PINCM6_PF_TIMA1_CCP1
-#define GPIO_PWMA_C1_IDX                                     DL_TIMER_CC_1_INDEX
+#define GPIO_MOTOR1_PWM_C1_PORT                                            GPIOA
+#define GPIO_MOTOR1_PWM_C1_PIN                                    DL_GPIO_PIN_30
+#define GPIO_MOTOR1_PWM_C1_IOMUX                                  (IOMUX_PINCM5)
+#define GPIO_MOTOR1_PWM_C1_IOMUX_FUNC                 IOMUX_PINCM5_PF_TIMG6_CCP1
+#define GPIO_MOTOR1_PWM_C1_IDX                               DL_TIMER_CC_1_INDEX
 
 
 
@@ -257,6 +257,18 @@ bool SYSCFG_DL_SYSCTL_SYSPLL_init(void);
 #define ABIN_BIN2_PORT                                                   (GPIOA)
 #define ABIN_BIN2_PIN                                            (DL_GPIO_PIN_9)
 #define ABIN_BIN2_IOMUX                                          (IOMUX_PINCM20)
+/* Defines for PH1: GPIOA.31 with pinCMx 6 on package pin 7 */
+#define GPIO_MOTORS_PH1_PORT                                             (GPIOA)
+#define GPIO_MOTORS_PH1_PIN                                     (DL_GPIO_PIN_31)
+#define GPIO_MOTORS_PH1_IOMUX                                     (IOMUX_PINCM6)
+/* Defines for nSLEEP1: GPIOA.2 with pinCMx 7 on package pin 10 */
+#define GPIO_MOTORS_nSLEEP1_PORT                                         (GPIOA)
+#define GPIO_MOTORS_nSLEEP1_PIN                                  (DL_GPIO_PIN_2)
+#define GPIO_MOTORS_nSLEEP1_IOMUX                                 (IOMUX_PINCM7)
+/* Defines for nFault1: GPIOB.4 with pinCMx 17 on package pin 20 */
+#define GPIO_MOTORS_nFault1_PORT                                         (GPIOB)
+#define GPIO_MOTORS_nFault1_PIN                                  (DL_GPIO_PIN_4)
+#define GPIO_MOTORS_nFault1_IOMUX                                (IOMUX_PINCM17)
 
 
 /* clang-format on */
@@ -267,7 +279,7 @@ void SYSCFG_DL_GPIO_init(void);
 void SYSCFG_DL_SYSCTL_init(void);
 
 bool SYSCFG_DL_SYSCTL_SYSPLL_init(void);
-void SYSCFG_DL_PWMA_init(void);
+void SYSCFG_DL_MOTOR1_PWM_init(void);
 void SYSCFG_DL_QEI_0_init(void);
 void SYSCFG_DL_QEI_1_init(void);
 void SYSCFG_DL_TIMER_7_init(void);

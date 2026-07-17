@@ -257,4 +257,4 @@ targets:
         otherCmds: --connect=under-reset
         speed: 1M
         targetName: mspm0g3519
-    uploader: pyOCD
+    uploader: JLink

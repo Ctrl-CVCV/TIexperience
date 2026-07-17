@@ -1,42 +1,31 @@
 /*
- * motor.c - TB6612 dual motor control
+ * motor.c - DRV8874 single motor control
  *
- * Motor A: AIN1=PB20, AIN2=PB24, PWMA=TIMA1 CH1 (PA31)
- * Motor B: BIN1=PA8,  BIN2=PA9,  PWMB=TIMA1 CH0 (PA28)
- *
- * Direction swap: set to 1 if motor spins opposite to expected direction
+ * EN/IN1  = TIMG6 CH1 (PA30)  — PWM speed
+ * PH/IN2  = PA31              — direction (HIGH=fwd, LOW=rev)
+ * nSLEEP  = PB4               — HIGH=enable, LOW=sleep
+ * nFault  = PB4               — input (ignore for now)
  */
+
 #include "motor.h"
-#include "../../ti_msp_dl_config.h"
+#include "../ti_msp_dl_config.h"
 
-/* ---- Direction swap (change if motor spins the wrong way) ---- */
-#define MOTOR_A_DIR_SWAP  1
-#define MOTOR_B_DIR_SWAP  0
-
-/* ---- Motor A pin / PWM macros ---- */
-#define MOTOR_A_IN1_PORT    ABIN_AIN1_PORT
-#define MOTOR_A_IN1_PIN     ABIN_AIN1_PIN
-#define MOTOR_A_IN2_PORT    ABIN_AIN2_PORT
-#define MOTOR_A_IN2_PIN     ABIN_AIN2_PIN
-#define MOTOR_A_PWM_INST    PWMA_INST
-#define MOTOR_A_PWM_IDX     DL_TIMER_CC_1_INDEX
-
-/* ---- Motor B pin / PWM macros ---- */
-#define MOTOR_B_IN1_PORT    ABIN_BIN1_PORT
-#define MOTOR_B_IN1_PIN     ABIN_BIN1_PIN
-#define MOTOR_B_IN2_PORT    ABIN_BIN2_PORT
-#define MOTOR_B_IN2_PIN     ABIN_BIN2_PIN
-#define MOTOR_B_PWM_INST    PWMA_INST
-#define MOTOR_B_PWM_IDX     DL_TIMER_CC_0_INDEX
+#define MOTOR_PWM_INST    MOTOR1_PWM_INST          /* TIMG6 */
+#define MOTOR_PWM_IDX     DL_TIMER_CC_1_INDEX       /* CH1 */
+#define MOTOR_PWM_PERIOD  1000
 
 void motor_init(void)
 {
-    motor_a_coast();
-    motor_b_coast();
+    /* nSLEEP = PB4. SysConfig configured it as nFault (input), override. */
+    DL_GPIO_initDigitalOutput(IOMUX_PINCM17);  /* PB4 */
+    DL_GPIO_setPins(GPIOB, DL_GPIO_PIN_4);
+
+    /* CCR=period → 0% duty; init-low edge-aligned: output stays LOW */
+    DL_TimerG_setCaptureCompareValue(MOTOR_PWM_INST, MOTOR_PWM_PERIOD,
+                                     MOTOR_PWM_IDX);
 }
 
-/* speed: -1000..1000, negative = reverse, 0 = coast */
-void motor_a_run(int16_t speed)
+void motor_run(int16_t speed)
 {
     uint16_t duty;
     uint16_t ccr;
@@ -45,93 +34,30 @@ void motor_a_run(int16_t speed)
     if (speed < -MOTOR_SPEED_MAX) speed = -MOTOR_SPEED_MAX;
 
     if (speed == 0) {
-        motor_a_coast();
+        motor_coast();
         return;
     }
 
     duty = (uint16_t)(speed > 0 ? speed : -speed);
     ccr  = MOTOR_PWM_PERIOD - duty;
 
-    DL_TimerA_setCaptureCompareValue(MOTOR_A_PWM_INST, ccr, MOTOR_A_PWM_IDX);
-
-#if MOTOR_A_DIR_SWAP
     if (speed > 0) {
-        /* Forward → electrically reverse to compensate */
-        DL_GPIO_clearPins(MOTOR_A_IN1_PORT, MOTOR_A_IN1_PIN);
-        DL_GPIO_setPins(MOTOR_A_IN2_PORT, MOTOR_A_IN2_PIN);
+        DL_GPIO_setPins(GPIO_MOTORS_PH1_PORT, GPIO_MOTORS_PH1_PIN);
     } else {
-        /* Reverse → electrically forward */
-        DL_GPIO_setPins(MOTOR_A_IN1_PORT, MOTOR_A_IN1_PIN);
-        DL_GPIO_clearPins(MOTOR_A_IN2_PORT, MOTOR_A_IN2_PIN);
-    }
-#else
-    if (speed > 0) {
-        DL_GPIO_setPins(MOTOR_A_IN1_PORT, MOTOR_A_IN1_PIN);
-        DL_GPIO_clearPins(MOTOR_A_IN2_PORT, MOTOR_A_IN2_PIN);
-    } else {
-        DL_GPIO_clearPins(MOTOR_A_IN1_PORT, MOTOR_A_IN1_PIN);
-        DL_GPIO_setPins(MOTOR_A_IN2_PORT, MOTOR_A_IN2_PIN);
-    }
-#endif
-}
-
-void motor_b_run(int16_t speed)
-{
-    uint16_t duty;
-    uint16_t ccr;
-
-    if (speed > MOTOR_SPEED_MAX)  speed = MOTOR_SPEED_MAX;
-    if (speed < -MOTOR_SPEED_MAX) speed = -MOTOR_SPEED_MAX;
-
-    if (speed == 0) {
-        motor_b_coast();
-        return;
+        DL_GPIO_clearPins(GPIO_MOTORS_PH1_PORT, GPIO_MOTORS_PH1_PIN);
     }
 
-    duty = (uint16_t)(speed > 0 ? speed : -speed);
-    ccr  = MOTOR_PWM_PERIOD - duty;
-
-    DL_TimerA_setCaptureCompareValue(MOTOR_B_PWM_INST, ccr, MOTOR_B_PWM_IDX);
-
-#if MOTOR_B_DIR_SWAP
-    if (speed > 0) {
-        DL_GPIO_clearPins(MOTOR_B_IN1_PORT, MOTOR_B_IN1_PIN);
-        DL_GPIO_setPins(MOTOR_B_IN2_PORT, MOTOR_B_IN2_PIN);
-    } else {
-        DL_GPIO_setPins(MOTOR_B_IN1_PORT, MOTOR_B_IN1_PIN);
-        DL_GPIO_clearPins(MOTOR_B_IN2_PORT, MOTOR_B_IN2_PIN);
-    }
-#else
-    if (speed > 0) {
-        DL_GPIO_setPins(MOTOR_B_IN1_PORT, MOTOR_B_IN1_PIN);
-        DL_GPIO_clearPins(MOTOR_B_IN2_PORT, MOTOR_B_IN2_PIN);
-    } else {
-        DL_GPIO_clearPins(MOTOR_B_IN1_PORT, MOTOR_B_IN1_PIN);
-        DL_GPIO_setPins(MOTOR_B_IN2_PORT, MOTOR_B_IN2_PIN);
-    }
-#endif
+    DL_TimerG_setCaptureCompareValue(MOTOR_PWM_INST, ccr, MOTOR_PWM_IDX);
 }
 
-void motor_a_coast(void)
+void motor_coast(void)
 {
-    DL_GPIO_clearPins(MOTOR_A_IN1_PORT, MOTOR_A_IN1_PIN);
-    DL_GPIO_clearPins(MOTOR_A_IN2_PORT, MOTOR_A_IN2_PIN);
+    DL_TimerG_setCaptureCompareValue(MOTOR_PWM_INST, MOTOR_PWM_PERIOD,
+                                     MOTOR_PWM_IDX);
 }
 
-void motor_b_coast(void)
+void motor_brake(void)
 {
-    DL_GPIO_clearPins(MOTOR_B_IN1_PORT, MOTOR_B_IN1_PIN);
-    DL_GPIO_clearPins(MOTOR_B_IN2_PORT, MOTOR_B_IN2_PIN);
-}
-
-void motor_a_brake(void)
-{
-    DL_GPIO_setPins(MOTOR_A_IN1_PORT, MOTOR_A_IN1_PIN);
-    DL_GPIO_setPins(MOTOR_A_IN2_PORT, MOTOR_A_IN2_PIN);
-}
-
-void motor_b_brake(void)
-{
-    DL_GPIO_setPins(MOTOR_B_IN1_PORT, MOTOR_B_IN1_PIN);
-    DL_GPIO_setPins(MOTOR_B_IN2_PORT, MOTOR_B_IN2_PIN);
+    /* DRV8874 slow-decay brake: PWM=100% → CCR=0 */
+    DL_TimerG_setCaptureCompareValue(MOTOR_PWM_INST, 0, MOTOR_PWM_IDX);
 }
