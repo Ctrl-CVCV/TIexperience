@@ -84,7 +84,7 @@ int main(void)
         rpm = encoder_a_get_rpm_filt();  /* QEI_0 */
 
         /* ---- Fixed PWM test — change value here ---- */
-        g_pwm = 500;  /* test with higher duty */
+        g_pwm = 100;   /* 10% duty */
         /* ---- PID mode — uncomment below and comment above ---- */
         // g_pwm = PID_Update(&g_pid, (float)g_setpoint, (float)rpm, g_dt);
 

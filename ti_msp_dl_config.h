@@ -269,6 +269,18 @@ bool SYSCFG_DL_SYSCTL_SYSPLL_init(void);
 #define GPIO_MOTORS_nFault1_PORT                                         (GPIOB)
 #define GPIO_MOTORS_nFault1_PIN                                  (DL_GPIO_PIN_4)
 #define GPIO_MOTORS_nFault1_IOMUX                                (IOMUX_PINCM17)
+/* Defines for PH2: GPIOB.0 with pinCMx 12 on package pin 15 */
+#define GPIO_MOTORS_PH2_PORT                                             (GPIOB)
+#define GPIO_MOTORS_PH2_PIN                                      (DL_GPIO_PIN_0)
+#define GPIO_MOTORS_PH2_IOMUX                                    (IOMUX_PINCM12)
+/* Defines for nSLEEP2: GPIOB.5 with pinCMx 18 on package pin 21 */
+#define GPIO_MOTORS_nSLEEP2_PORT                                         (GPIOB)
+#define GPIO_MOTORS_nSLEEP2_PIN                                  (DL_GPIO_PIN_5)
+#define GPIO_MOTORS_nSLEEP2_IOMUX                                (IOMUX_PINCM18)
+/* Defines for nFault2: GPIOB.7 with pinCMx 24 on package pin 31 */
+#define GPIO_MOTORS_nFault2_PORT                                         (GPIOB)
+#define GPIO_MOTORS_nFault2_PIN                                  (DL_GPIO_PIN_7)
+#define GPIO_MOTORS_nFault2_IOMUX                                (IOMUX_PINCM24)
 
 
 /* clang-format on */
