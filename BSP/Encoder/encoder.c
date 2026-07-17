@@ -66,12 +66,12 @@ void TIMER_12_INST_IRQHandler(void)
         g_pos_b += delta_b;
 
         /* RPM = delta * 60 * 500 / 2000 = delta * 15 */
-        g_rpm_a = (int16_t)(-(int32_t)delta_a * 15);  /* negate: encoder polarity */
+        g_rpm_a = (int16_t)((int32_t)delta_a * 15);  /* positive = fwd */
         g_rpm_b = (int16_t)((int32_t)delta_b * 15);
 
-        /* EMA filter: α=0.25, τ≈6ms — smooths quantization without too much lag */
-        g_rpm_filt_a += (g_rpm_a - g_rpm_filt_a) >> 2;
-        g_rpm_filt_b += (g_rpm_b - g_rpm_filt_b) >> 2;
+        /* EMA filter: α=0.1 (old*0.9 + new*0.1), τ≈45ms — heavy smoothing */
+        g_rpm_filt_a += ((g_rpm_a - g_rpm_filt_a) * 13) >> 7;
+        g_rpm_filt_b += ((g_rpm_b - g_rpm_filt_b) * 13) >> 7;
         break;
 
     default:

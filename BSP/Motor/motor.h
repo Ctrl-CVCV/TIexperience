@@ -3,8 +3,8 @@
 
 #include <stdint.h>
 
-/* Speed range: 0 = stop, MOTOR_PWM_PERIOD = full speed */
-#define MOTOR_PWM_PERIOD  1000
+/* PWM freq = 80MHz / 4000 = 20kHz (above audible) */
+#define MOTOR_PWM_PERIOD  4000
 #define MOTOR_SPEED_MAX   1000
 
 void motor_init(void);

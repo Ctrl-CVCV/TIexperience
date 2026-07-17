@@ -11,7 +11,7 @@
 
 /* ---- Direction swap (change if motor spins the wrong way) ---- */
 #define MOTOR_A_DIR_SWAP  1
-#define MOTOR_B_DIR_SWAP  0
+#define MOTOR_B_DIR_SWAP  1   /* encoder polarity fix */
 
 /* ---- Motor A pin / PWM macros ---- */
 #define MOTOR_A_IN1_PORT    ABIN_AIN1_PORT
@@ -31,6 +31,8 @@
 
 void motor_init(void)
 {
+    /* Set PWM freq to 20kHz (above audible, below SysConfig 80kHz) */
+    DL_TimerA_setLoadValue(PWMA_INST, MOTOR_PWM_PERIOD);
     motor_a_coast();
     motor_b_coast();
 }
@@ -50,7 +52,7 @@ void motor_a_run(int16_t speed)
     }
 
     duty = (uint16_t)(speed > 0 ? speed : -speed);
-    ccr  = MOTOR_PWM_PERIOD - duty;
+    ccr  = MOTOR_PWM_PERIOD - (uint32_t)duty * MOTOR_PWM_PERIOD / MOTOR_SPEED_MAX;
 
     DL_TimerA_setCaptureCompareValue(MOTOR_A_PWM_INST, ccr, MOTOR_A_PWM_IDX);
 
@@ -89,7 +91,7 @@ void motor_b_run(int16_t speed)
     }
 
     duty = (uint16_t)(speed > 0 ? speed : -speed);
-    ccr  = MOTOR_PWM_PERIOD - duty;
+    ccr  = MOTOR_PWM_PERIOD - (uint32_t)duty * MOTOR_PWM_PERIOD / MOTOR_SPEED_MAX;
 
     DL_TimerA_setCaptureCompareValue(MOTOR_B_PWM_INST, ccr, MOTOR_B_PWM_IDX);
 

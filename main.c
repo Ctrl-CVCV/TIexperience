@@ -10,17 +10,20 @@
 #include "BSP/UART_DMA/uart_dma.h"
 
 /* ========== PID Parameters (TUNE HERE) ========== */
-#define PID_A_KP   0.00f   /* Motor A disabled for now — testing Motor B */
-#define PID_A_KI   0.0f
-#define PID_A_KD   0.000f
+#define PID_A_KP   0.00f
+#define PID_A_KI   0.00f
+#define PID_A_KD   0.00f
 
-#define PID_B_KP   1.0f
-#define PID_B_KI   0.52f
-#define PID_B_KD   0.00f  /* small D: damps mechanical resonance */
+#define PID_B_KP   0.001f
+#define PID_B_KI   0.000f
+#define PID_B_KD   0.00f
+
+/* ========== Output Limit (30% duty = 300, motor rated 7.4V @ 12V supply) ========== */
+#define PWM_LIMIT  300
 
 /* ========== Speed Setpoints (Target RPM, motor shaft) ========== */
-volatile int16_t g_setpoint_a = 2000;   /* Motor A target RPM */
-volatile int16_t g_setpoint_b = 2000;   /* Motor B target RPM */
+volatile int16_t g_setpoint_a = 1000;   /* Motor A target RPM */
+volatile int16_t g_setpoint_b = 1000;   /* Motor B target RPM */
 
 /* ========== Internals ========== */
 volatile uint32_t nowtime;              /* IMU.o reference */
@@ -66,9 +69,9 @@ int main(void)
     encoder_init();
     uart_dma_init();
 
-    /* Init PIDs */
-    PID_Init(&g_pid_a, PID_A_KP, PID_A_KI, PID_A_KD, (float)MOTOR_SPEED_MAX);
-    PID_Init(&g_pid_b, PID_B_KP, PID_B_KI, PID_B_KD, 600.0f);  /* output limit = 600, per ref */
+    /* Init PIDs — output clamped to 30% duty */
+    PID_Init(&g_pid_a, PID_A_KP, PID_A_KI, PID_A_KD, (float)PWM_LIMIT);
+    PID_Init(&g_pid_b, PID_B_KP, PID_B_KI, PID_B_KD, (float)PWM_LIMIT);
 
     /* Set up TIMER_7 for periodic 200Hz (5ms)
      * TIMER_7 clk = 80MHz/8 = 10MHz. period = 0.005*10M-1 = 49999 */
@@ -92,19 +95,19 @@ int main(void)
         rpm_a = encoder_b_get_rpm_filt();  /* QEI_1 → Motor A */
         rpm_b = encoder_a_get_rpm_filt();  /* QEI_0 → Motor B */
 
-        /* Positional PID: output = Kp*error + Ki*∫error - Kd*dRPM/dt */
-        g_pwm_a = PID_Update(&g_pid_a, (float)g_setpoint_a, (float)rpm_a, g_dt);
-        g_pwm_b = PID_Update(&g_pid_b, (float)g_setpoint_b, (float)rpm_b, g_dt);
+        /* Open-loop PWM — no PID */
+        g_pwm_a = 200;
+        g_pwm_b = 200;
 
         motor_a_run((int16_t)g_pwm_a);
         motor_b_run((int16_t)g_pwm_b);
 
-        /* UART telemetry: rpm,pwm */
+        /* UART: rpm_a,rpm_b */
         if (!uart_dma_is_busy()) {
             p = g_msg;
-            p = itoa(p, rpm_b);
+            p = itoa(p, rpm_a);
             *p++ = ',';
-            p = itoa(p, (int16_t)g_pwm_b);
+            p = itoa(p, rpm_b);
             *p++ = '\n';
             uart_dma_send((const uint8_t *)g_msg, (uint16_t)(p - g_msg));
         }
