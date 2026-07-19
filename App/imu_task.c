@@ -14,10 +14,10 @@
 #define KD          10.f
 #define MAX_OUT     500
 
-/* motor1 位置循环序列 (rad) */
-static const float motor1_seq[] = {0.25f, 2.5f, 5.2f};
-#define MOTOR1_SEQ_LEN   3
-#define HOLD_TIME_MS  10000    /* 每个位置停留 6 秒 */
+/* motor1 三个方向对应角度 (rad) */
+#define MOTOR1_ANGLE_FRONT   0.25f
+#define MOTOR1_ANGLE_LEFT    2.5f
+#define MOTOR1_ANGLE_RIGHT   6.2f
 
 /* PC13 电机固定角度 = 4.51 rad */
 #define PC13_FIXED_ANGLE      4.51f
@@ -76,8 +76,7 @@ void ImuTask_Entry(void const * argument)
 
     float shaft_angle;
     uint32_t loop_count = 0;
-    uint8_t  seq_idx = 0;           /* 当前序列位置索引 */
-    uint32_t hold_tick = 0;         /* 进入当前位置的时刻 */
+    float motor1_target_angle = MOTOR1_ANGLE_FRONT;
 
     for(;;)
     {
@@ -105,19 +104,20 @@ void ImuTask_Entry(void const * argument)
         if(out>MAX_OUT)out=MAX_OUT; if(out<0)out=0;
         htim3.Instance->CCR4=(uint16_t)out;
 
-        /* ── motor1 位置循环：0.25→2.5→5.2→0.25… 每位置停3秒 ── */
+        /* ── motor1 角度控制：根据 CDC 方向命令切换目标角度 ── */
         if (motor_enabled && !calib_mode) {
-            uint32_t now = HAL_GetTick();
-
-            /* 到时间了，切换到下一个位置 */
-            if (now - hold_tick >= HOLD_TIME_MS) {
-                hold_tick = now;
-                seq_idx++;
-                if (seq_idx >= MOTOR1_SEQ_LEN) seq_idx = 0;
+            if (g_motor1_dir_cmd_valid) {
+                g_motor1_dir_cmd_valid = 0;
+                if (g_motor1_dir_cmd == MOTOR1_DIR_FRONT) {
+                    motor1_target_angle = MOTOR1_ANGLE_FRONT;
+                } else if (g_motor1_dir_cmd == MOTOR1_DIR_LEFT) {
+                    motor1_target_angle = MOTOR1_ANGLE_LEFT;
+                } else if (g_motor1_dir_cmd == MOTOR1_DIR_RIGHT) {
+                    motor1_target_angle = MOTOR1_ANGLE_RIGHT;
+                }
             }
 
-            float m1_target = motor1_seq[seq_idx];
-            if (QD4310_SetAngle(&motor1,  m1_target) == 0) can_tx_cnt++; else can_err_cnt++;
+            if (QD4310_SetAngle(&motor1, motor1_target_angle) == 0) can_tx_cnt++; else can_err_cnt++;
             /* motor2 (PC13) = 固定角度 4.51 rad，角度模式 */
             if (QD4310_SetAngle(&motor2,  PC13_FIXED_ANGLE) == 0) can_tx_cnt++; else can_err_cnt++;
         } else {

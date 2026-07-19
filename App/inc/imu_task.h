@@ -10,4 +10,11 @@
 extern float imuAngle[3];
 extern float g_shaft_angle;       /* IMU 轴角度 */
 
+#define MOTOR1_DIR_FRONT   0x00
+#define MOTOR1_DIR_LEFT    0x01
+#define MOTOR1_DIR_RIGHT   0x02
+
+extern volatile uint8_t g_motor1_dir_cmd;
+extern volatile uint8_t g_motor1_dir_cmd_valid;
+
 #endif

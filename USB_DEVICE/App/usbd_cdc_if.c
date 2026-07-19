@@ -20,6 +20,7 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "usbd_cdc_if.h"
+#include "imu_task.h"
 
 /* USER CODE BEGIN INCLUDE */
 
@@ -31,6 +32,12 @@
 
 /* USER CODE BEGIN PV */
 /* Private variables ---------------------------------------------------------*/
+
+volatile uint8_t g_motor1_dir_cmd = MOTOR1_DIR_FRONT;
+volatile uint8_t g_motor1_dir_cmd_valid = 0;
+
+static uint8_t cdc_rx_state = 0;
+static uint8_t cdc_rx_dir = MOTOR1_DIR_FRONT;
 
 /* USER CODE END PV */
 
@@ -127,6 +134,42 @@ static int8_t CDC_DeInit_HS(void);
 static int8_t CDC_Control_HS(uint8_t cmd, uint8_t* pbuf, uint16_t length);
 static int8_t CDC_Receive_HS(uint8_t* pbuf, uint32_t *Len);
 static int8_t CDC_TransmitCplt_HS(uint8_t *pbuf, uint32_t *Len, uint8_t epnum);
+
+static void CDC_ProcessRxByte(uint8_t byte)
+{
+  switch (cdc_rx_state)
+  {
+    case 0:
+      cdc_rx_state = (byte == 0xAA) ? 1 : 0;
+      break;
+
+    case 1:
+      cdc_rx_state = (byte == 0xFF) ? 2 : ((byte == 0xAA) ? 1 : 0);
+      break;
+
+    case 2:
+      cdc_rx_dir = byte;
+      cdc_rx_state = 3;
+      break;
+
+    case 3:
+      cdc_rx_state = (byte == 0xAA) ? 4 : ((byte == 0xAA) ? 1 : 0);
+      break;
+
+    case 4:
+      if (byte == 0xFF)
+      {
+        g_motor1_dir_cmd = cdc_rx_dir;
+        g_motor1_dir_cmd_valid = 1;
+      }
+      cdc_rx_state = 0;
+      break;
+
+    default:
+      cdc_rx_state = 0;
+      break;
+  }
+}
 
 /* USER CODE BEGIN PRIVATE_FUNCTIONS_DECLARATION */
 
@@ -264,6 +307,10 @@ static int8_t CDC_Control_HS(uint8_t cmd, uint8_t* pbuf, uint16_t length)
 static int8_t CDC_Receive_HS(uint8_t* Buf, uint32_t *Len)
 {
   /* USER CODE BEGIN 11 */
+  for (uint32_t i = 0; i < *Len; i++)
+  {
+    CDC_ProcessRxByte(Buf[i]);
+  }
   USBD_CDC_SetRxBuffer(&hUsbDeviceHS, &Buf[0]);
   USBD_CDC_ReceivePacket(&hUsbDeviceHS);
   return (USBD_OK);
