@@ -14,14 +14,10 @@
 #define KD          10.f
 #define MAX_OUT     500
 
-/* ── 角度闭环参数 ── */
-#define ANGLE_SETTLE_DEG        2.0f
-#define YAW_SPEED_KP            6.0f
-#define YAW_SPEED_MAX          40.0f
-#define YAW_SPEED_MIN          20.0f
-#define YAW_SPEED_MIN_ERR       5.0f
-#define YAW_ACCEL_RPM_S       400.0f
-#define YAW_MOTOR_DIR           1.0f
+/* motor1 位置循环序列 (rad) */
+static const float motor1_seq[] = {0.25f, 2.5f, 5.2f};
+#define MOTOR1_SEQ_LEN   3
+#define HOLD_TIME_MS  10000    /* 每个位置停留 6 秒 */
 
 /* PC13 电机固定角度 = 4.51 rad */
 #define PC13_FIXED_ANGLE      4.51f
@@ -40,23 +36,13 @@ volatile uint32_t can_tx_cnt = 0;
 volatile uint32_t can_err_cnt = 0;
 
 uint8_t  motor_enabled = 1;
-uint8_t  calib_mode   = 1;    /* 标定模式：1=标定, 0=正常运行 */
+uint8_t  calib_mode   = 0;    /* 标定模式：1=标定, 0=正常运行 */
 float g_shaft_angle = 0.0f;
-
-static float angle_wrap_180(float e) {
-    while(e>180) e-=360; while(e<-180) e+=360; return e;
-}
 
 static float get_shaft_angle(float q[4]) {
     float gx=2*(q[1]*q[3]-q[0]*q[2]);
     float gy=2*(q[0]*q[1]+q[2]*q[3]);
     return atan2f(gx,gy)*57.295779513f;
-}
-
-static float limitf(float v, float lo, float hi) {
-    if (v < lo) return lo;
-    if (v > hi) return hi;
-    return v;
 }
 
 void AHRS_init(float q[4])   { q[0]=1; q[1]=0; q[2]=0; q[3]=0; }
@@ -88,12 +74,10 @@ void ImuTask_Entry(void const * argument)
     uint8_t m1e = QD4310_Enable(&motor1); osDelay(50);
     uint8_t m2e = QD4310_Enable(&motor2); osDelay(50);
 
-    float target_angle = 42.00f;
-
     float shaft_angle;
-    float speed_cmd = 0.0f;
-    uint32_t control_tick = HAL_GetTick();
     uint32_t loop_count = 0;
+    uint8_t  seq_idx = 0;           /* 当前序列位置索引 */
+    uint32_t hold_tick = 0;         /* 进入当前位置的时刻 */
 
     for(;;)
     {
@@ -121,54 +105,24 @@ void ImuTask_Entry(void const * argument)
         if(out>MAX_OUT)out=MAX_OUT; if(out<0)out=0;
         htim3.Instance->CCR4=(uint16_t)out;
 
-        /* ── IMU角度闭环 -> QD4310速度命令 ── */
+        /* ── motor1 位置循环：0.25→2.5→5.2→0.25… 每位置停3秒 ── */
         if (motor_enabled && !calib_mode) {
             uint32_t now = HAL_GetTick();
-            uint32_t dt_ms = now - control_tick;
 
-            float angle_error = angle_wrap_180(target_angle - shaft_angle);
-            float desired_speed = 0.0f;
-
-            if (dt_ms > 0) {
-                float max_delta = YAW_ACCEL_RPM_S * ((float)dt_ms * 0.001f);
-                float delta_speed;
-
-                control_tick = now;
-
-                if (fabsf(angle_error) > ANGLE_SETTLE_DEG) {
-                    desired_speed = YAW_MOTOR_DIR * angle_error * YAW_SPEED_KP;
-                    desired_speed = limitf(desired_speed, -YAW_SPEED_MAX, YAW_SPEED_MAX);
-
-                    if (fabsf(angle_error) > YAW_SPEED_MIN_ERR &&
-                        fabsf(desired_speed) < YAW_SPEED_MIN) {
-                        desired_speed = (desired_speed >= 0.0f) ? YAW_SPEED_MIN : -YAW_SPEED_MIN;
-                    }
-                }
-
-                delta_speed = desired_speed - speed_cmd;
-                if (delta_speed > max_delta) {
-                    delta_speed = max_delta;
-                } else if (delta_speed < -max_delta) {
-                    delta_speed = -max_delta;
-                }
-
-                speed_cmd += delta_speed;
-
-                if (desired_speed == 0.0f && fabsf(speed_cmd) < 1.0f) {
-                    speed_cmd = 0.0f;
-                }
+            /* 到时间了，切换到下一个位置 */
+            if (now - hold_tick >= HOLD_TIME_MS) {
+                hold_tick = now;
+                seq_idx++;
+                if (seq_idx >= MOTOR1_SEQ_LEN) seq_idx = 0;
             }
 
-            /* motor1 (PC14) = IMU角度闭环，速度模式 */
-            if (QD4310_SetSpeed(&motor1,  speed_cmd) == 0) can_tx_cnt++; else can_err_cnt++;
+            float m1_target = motor1_seq[seq_idx];
+            if (QD4310_SetAngle(&motor1,  m1_target) == 0) can_tx_cnt++; else can_err_cnt++;
             /* motor2 (PC13) = 固定角度 4.51 rad，角度模式 */
             if (QD4310_SetAngle(&motor2,  PC13_FIXED_ANGLE) == 0) can_tx_cnt++; else can_err_cnt++;
         } else {
-            if (speed_cmd != 0.0f) {
-                speed_cmd = 0.0f;
-                if (QD4310_SetSpeed(&motor1, 0.0f) == 0) can_tx_cnt++; else can_err_cnt++;
-                if (QD4310_SetSpeed(&motor2, 0.0f) == 0) can_tx_cnt++; else can_err_cnt++;
-            }
+            if (QD4310_SetSpeed(&motor1, 0.0f) == 0) can_tx_cnt++; else can_err_cnt++;
+            if (QD4310_SetSpeed(&motor2, 0.0f) == 0) can_tx_cnt++; else can_err_cnt++;
         }
 
         osDelay(1);
