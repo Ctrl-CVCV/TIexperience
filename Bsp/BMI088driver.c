@@ -12,10 +12,10 @@ float BMI088_GYRO_SEN = BMI088_GYRO_2000_SEN;
 /**
 ************************************************************************
 * @brief:      	BMI088_accel_write_single_reg(reg, data)
-* @param:       reg - ¼Ä´æÆ÷µØÖ·
-*               data - Ğ´ÈëµÄÊı¾İ
+* @param:       reg - ï¿½Ä´ï¿½ï¿½ï¿½ï¿½ï¿½Ö·
+*               data - Ğ´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 * @retval:     	void
-* @details:    	Í¨¹ıBMI088¼ÓËÙ¶È¼ÆµÄSPI×ÜÏßĞ´Èëµ¥¸ö¼Ä´æÆ÷µÄºê¶¨Òå
+* @details:    	Í¨ï¿½ï¿½BMI088ï¿½ï¿½ï¿½Ù¶È¼Æµï¿½SPIï¿½ï¿½ï¿½ï¿½Ğ´ï¿½ëµ¥ï¿½ï¿½ï¿½Ä´ï¿½ï¿½ï¿½ï¿½Äºê¶¨ï¿½ï¿½
 ************************************************************************
 **/
 #define BMI088_accel_write_single_reg(reg, data) \
@@ -27,10 +27,10 @@ float BMI088_GYRO_SEN = BMI088_GYRO_2000_SEN;
 /**
 ************************************************************************
 * @brief:      	BMI088_accel_read_single_reg(reg, data)
-* @param:       reg - ¼Ä´æÆ÷µØÖ·
-*               data - ¶ÁÈ¡µÄ¼Ä´æÆ÷Êı¾İ
+* @param:       reg - ï¿½Ä´ï¿½ï¿½ï¿½ï¿½ï¿½Ö·
+*               data - ï¿½ï¿½È¡ï¿½Ä¼Ä´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 * @retval:     	void
-* @details:    	Í¨¹ıBMI088¼ÓËÙ¶È¼ÆµÄSPI×ÜÏß¶ÁÈ¡µ¥¸ö¼Ä´æÆ÷µÄºê¶¨Òå
+* @details:    	Í¨ï¿½ï¿½BMI088ï¿½ï¿½ï¿½Ù¶È¼Æµï¿½SPIï¿½ï¿½ï¿½ß¶ï¿½È¡ï¿½ï¿½ï¿½ï¿½ï¿½Ä´ï¿½ï¿½ï¿½ï¿½Äºê¶¨ï¿½ï¿½
 ************************************************************************
 **/
 #define BMI088_accel_read_single_reg(reg, data) \
@@ -44,11 +44,11 @@ float BMI088_GYRO_SEN = BMI088_GYRO_2000_SEN;
 /**
 ************************************************************************
 * @brief:      	BMI088_accel_read_muli_reg(reg, data, len)
-* @param:       reg - ÆğÊ¼¼Ä´æÆ÷µØÖ·
-*               data - ´æ´¢¶ÁÈ¡Êı¾İµÄ»º³åÇø
-*               len - Òª¶ÁÈ¡µÄ×Ö½ÚÊı
+* @param:       reg - ï¿½ï¿½Ê¼ï¿½Ä´ï¿½ï¿½ï¿½ï¿½ï¿½Ö·
+*               data - ï¿½æ´¢ï¿½ï¿½È¡ï¿½ï¿½ï¿½İµÄ»ï¿½ï¿½ï¿½ï¿½ï¿½
+*               len - Òªï¿½ï¿½È¡ï¿½ï¿½ï¿½Ö½ï¿½ï¿½ï¿½
 * @retval:     	void
-* @details:    	Í¨¹ıBMI088¼ÓËÙ¶È¼ÆµÄSPI×ÜÏßÁ¬Ğø¶ÁÈ¡¶à¸ö¼Ä´æÆ÷µÄºê¶¨Òå
+* @details:    	Í¨ï¿½ï¿½BMI088ï¿½ï¿½ï¿½Ù¶È¼Æµï¿½SPIï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½Ä´ï¿½ï¿½ï¿½ï¿½Äºê¶¨ï¿½ï¿½
 ************************************************************************
 **/
 #define BMI088_accel_read_muli_reg(reg, data, len) \
@@ -61,10 +61,10 @@ float BMI088_GYRO_SEN = BMI088_GYRO_2000_SEN;
 /**
 ************************************************************************
 * @brief:      	BMI088_gyro_write_single_reg(reg, data)
-* @param:       reg - ¼Ä´æÆ÷µØÖ·
-*               data - Ğ´ÈëµÄÊı¾İ
+* @param:       reg - ï¿½Ä´ï¿½ï¿½ï¿½ï¿½ï¿½Ö·
+*               data - Ğ´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 * @retval:     	void
-* @details:    	Í¨¹ıBMI088ÍÓÂİÒÇµÄSPI×ÜÏßĞ´Èëµ¥¸ö¼Ä´æÆ÷µÄºê¶¨Òå
+* @details:    	Í¨ï¿½ï¿½BMI088ï¿½ï¿½ï¿½ï¿½ï¿½Çµï¿½SPIï¿½ï¿½ï¿½ï¿½Ğ´ï¿½ëµ¥ï¿½ï¿½ï¿½Ä´ï¿½ï¿½ï¿½ï¿½Äºê¶¨ï¿½ï¿½
 ************************************************************************
 **/
 #define BMI088_gyro_write_single_reg(reg, data) \
@@ -76,10 +76,10 @@ float BMI088_GYRO_SEN = BMI088_GYRO_2000_SEN;
 /**
 ************************************************************************
 * @brief:      	BMI088_gyro_read_single_reg(reg, data)
-* @param:       reg - ¼Ä´æÆ÷µØÖ·
-*               data - ¶ÁÈ¡µÄ¼Ä´æÆ÷Êı¾İ
+* @param:       reg - ï¿½Ä´ï¿½ï¿½ï¿½ï¿½ï¿½Ö·
+*               data - ï¿½ï¿½È¡ï¿½Ä¼Ä´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 * @retval:     	void
-* @details:    	Í¨¹ıBMI088ÍÓÂİÒÇµÄSPI×ÜÏß¶ÁÈ¡µ¥¸ö¼Ä´æÆ÷µÄºê¶¨Òå
+* @details:    	Í¨ï¿½ï¿½BMI088ï¿½ï¿½ï¿½ï¿½ï¿½Çµï¿½SPIï¿½ï¿½ï¿½ß¶ï¿½È¡ï¿½ï¿½ï¿½ï¿½ï¿½Ä´ï¿½ï¿½ï¿½ï¿½Äºê¶¨ï¿½ï¿½
 ************************************************************************
 **/
 #define BMI088_gyro_read_single_reg(reg, data)  \
@@ -91,11 +91,11 @@ float BMI088_GYRO_SEN = BMI088_GYRO_2000_SEN;
 /**
 ************************************************************************
 * @brief:      	BMI088_gyro_read_muli_reg(reg, data, len)
-* @param:       reg - ÆğÊ¼¼Ä´æÆ÷µØÖ·
-*               data - ´æ´¢¶ÁÈ¡Êı¾İµÄ»º³åÇø
-*               len - Òª¶ÁÈ¡µÄ×Ö½ÚÊı
+* @param:       reg - ï¿½ï¿½Ê¼ï¿½Ä´ï¿½ï¿½ï¿½ï¿½ï¿½Ö·
+*               data - ï¿½æ´¢ï¿½ï¿½È¡ï¿½ï¿½ï¿½İµÄ»ï¿½ï¿½ï¿½ï¿½ï¿½
+*               len - Òªï¿½ï¿½È¡ï¿½ï¿½ï¿½Ö½ï¿½ï¿½ï¿½
 * @retval:     	void
-* @details:    	Í¨¹ıBMI088ÍÓÂİÒÇµÄSPI×ÜÏßÁ¬Ğø¶ÁÈ¡¶à¸ö¼Ä´æÆ÷µÄºê¶¨Òå
+* @details:    	Í¨ï¿½ï¿½BMI088ï¿½ï¿½ï¿½ï¿½ï¿½Çµï¿½SPIï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½Ä´ï¿½ï¿½ï¿½ï¿½Äºê¶¨ï¿½ï¿½
 ************************************************************************
 **/
 #define BMI088_gyro_read_muli_reg(reg, data, len)   \
@@ -103,6 +103,47 @@ float BMI088_GYRO_SEN = BMI088_GYRO_2000_SEN;
         BMI088_GYRO_NS_L();                         \
         BMI088_read_muli_reg((reg), (data), (len)); \
         BMI088_GYRO_NS_H();                         \
+    }
+
+/* â”€â”€ IMU2 å®ï¼ˆä½¿ç”¨ IMU2 çš„ CS å¼•è„šï¼Œå…±äº«åŒä¸€ SPI æ€»çº¿ï¼‰â”€â”€ */
+#define BMI088_accel2_write_single_reg(reg, data) \
+    {                                             \
+        BMI088_ACCEL2_NS_L();                     \
+        BMI088_write_single_reg((reg), (data));   \
+        BMI088_ACCEL2_NS_H();                     \
+    }
+#define BMI088_accel2_read_single_reg(reg, data)  \
+    {                                             \
+        BMI088_ACCEL2_NS_L();                     \
+        BMI088_read_write_byte((reg) | 0x80);     \
+        BMI088_read_write_byte(0x55);             \
+        (data) = BMI088_read_write_byte(0x55);    \
+        BMI088_ACCEL2_NS_H();                     \
+    }
+#define BMI088_accel2_read_muli_reg(reg, data, len) \
+    {                                               \
+        BMI088_ACCEL2_NS_L();                       \
+        BMI088_read_write_byte((reg) | 0x80);       \
+        BMI088_read_muli_reg(reg, data, len);       \
+        BMI088_ACCEL2_NS_H();                       \
+    }
+#define BMI088_gyro2_write_single_reg(reg, data) \
+    {                                            \
+        BMI088_GYRO2_NS_L();                     \
+        BMI088_write_single_reg((reg), (data));  \
+        BMI088_GYRO2_NS_H();                     \
+    }
+#define BMI088_gyro2_read_single_reg(reg, data)  \
+    {                                            \
+        BMI088_GYRO2_NS_L();                     \
+        BMI088_read_single_reg((reg), &(data));  \
+        BMI088_GYRO2_NS_H();                     \
+    }
+#define BMI088_gyro2_read_muli_reg(reg, data, len)   \
+    {                                                \
+        BMI088_GYRO2_NS_L();                         \
+        BMI088_read_muli_reg((reg), (data), (len));  \
+        BMI088_GYRO2_NS_H();                         \
     }
 
 static void BMI088_write_single_reg(uint8_t reg, uint8_t data);
@@ -119,7 +160,7 @@ static void BMI088_read_muli_reg(uint8_t reg, uint8_t *buf, uint8_t len);
 * @brief:      	write_BMI088_accel_reg_data_error_init(void)
 * @param:       void
 * @retval:     	void
-* @details:    	BMI088¼ÓËÙ¶È´«¸ĞÆ÷¼Ä´æÆ÷Êı¾İĞ´Èë´íÎó´¦Àí³õÊ¼»¯
+* @details:    	BMI088ï¿½ï¿½ï¿½Ù¶È´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ğ´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¼ï¿½ï¿½
 ************************************************************************
 **/
 static uint8_t write_BMI088_accel_reg_data_error[BMI088_WRITE_ACCEL_REG_NUM][3] =
@@ -137,7 +178,7 @@ static uint8_t write_BMI088_accel_reg_data_error[BMI088_WRITE_ACCEL_REG_NUM][3] 
 * @brief:      	write_BMI088_gyro_reg_data_error_init(void)
 * @param:       void
 * @retval:     	void
-* @details:    	BMI088ÍÓÂİÒÇ´«¸ĞÆ÷¼Ä´æÆ÷Êı¾İĞ´Èë´íÎó´¦Àí³õÊ¼»¯
+* @details:    	BMI088ï¿½ï¿½ï¿½ï¿½ï¿½Ç´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ğ´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¼ï¿½ï¿½
 ************************************************************************
 **/
 static uint8_t write_BMI088_gyro_reg_data_error[BMI088_WRITE_GYRO_REG_NUM][3] =
@@ -154,8 +195,8 @@ static uint8_t write_BMI088_gyro_reg_data_error[BMI088_WRITE_GYRO_REG_NUM][3] =
 ************************************************************************
 * @brief:      	BMI088_init(void)
 * @param:       void
-* @retval:     	uint8_t - ´íÎó´úÂë
-* @details:    	BMI088´«¸ĞÆ÷³õÊ¼»¯º¯Êı£¬°üÀ¨GPIOºÍSPI³õÊ¼»¯£¬ÒÔ¼°¼ÓËÙ¶ÈºÍÍÓÂİÒÇµÄ³õÊ¼»¯
+* @retval:     	uint8_t - ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+* @details:    	BMI088ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½GPIOï¿½ï¿½SPIï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½ï¿½Ô¼ï¿½ï¿½ï¿½ï¿½Ù¶Èºï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÇµÄ³ï¿½Ê¼ï¿½ï¿½
 ************************************************************************
 **/
 uint8_t BMI088_init(void)
@@ -174,8 +215,8 @@ uint8_t BMI088_init(void)
 ************************************************************************
 * @brief:      	bmi088_accel_init(void)
 * @param:       void
-* @retval:     	uint8_t - ´íÎó´úÂë
-* @details:    	BMI088¼ÓËÙ¶È´«¸ĞÆ÷³õÊ¼»¯º¯Êı£¬°üÀ¨Í¨ĞÅ¼ì²é¡¢Èí¼ş¸´Î»¡¢ÅäÖÃ¼Ä´æÆ÷Ğ´Èë¼°¼ì²é
+* @retval:     	uint8_t - ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+* @details:    	BMI088ï¿½ï¿½ï¿½Ù¶È´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¨ï¿½Å¼ï¿½é¡¢ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Î»ï¿½ï¿½ï¿½ï¿½ï¿½Ã¼Ä´ï¿½ï¿½ï¿½Ğ´ï¿½ë¼°ï¿½ï¿½ï¿½
 ************************************************************************
 **/
 uint8_t bmi088_accel_init(void)
@@ -226,8 +267,8 @@ uint8_t bmi088_accel_init(void)
 ************************************************************************
 * @brief:      	bmi088_gyro_init(void)
 * @param:       void
-* @retval:     	uint8_t - ´íÎó´úÂë
-* @details:    	BMI088ÍÓÂİÒÇ´«¸ĞÆ÷³õÊ¼»¯º¯Êı£¬°üÀ¨Í¨ĞÅ¼ì²é¡¢Èí¼ş¸´Î»¡¢ÅäÖÃ¼Ä´æÆ÷Ğ´Èë¼°¼ì²é
+* @retval:     	uint8_t - ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+* @details:    	BMI088ï¿½ï¿½ï¿½ï¿½ï¿½Ç´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¨ï¿½Å¼ï¿½é¡¢ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Î»ï¿½ï¿½ï¿½ï¿½ï¿½Ã¼Ä´ï¿½ï¿½ï¿½Ğ´ï¿½ë¼°ï¿½ï¿½ï¿½
 ************************************************************************
 **/
 uint8_t bmi088_gyro_init(void)
@@ -277,11 +318,11 @@ uint8_t bmi088_gyro_init(void)
 /**
 ************************************************************************
 * @brief:      	BMI088_read(float gyro[3], float accel[3], float *temperate)
-* @param:       gyro - ÍÓÂİÒÇÊı¾İÊı×é (x, y, z)
-* @param:       accel - ¼ÓËÙ¶È¼ÆÊı¾İÊı×é (x, y, z)
-* @param:       temperate - ÎÂ¶ÈÊı¾İÖ¸Õë
+* @param:       gyro - ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ (x, y, z)
+* @param:       accel - ï¿½ï¿½ï¿½Ù¶È¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ (x, y, z)
+* @param:       temperate - ï¿½Â¶ï¿½ï¿½ï¿½ï¿½ï¿½Ö¸ï¿½ï¿½
 * @retval:     	void
-* @details:    	¶ÁÈ¡BMI088´«¸ĞÆ÷Êı¾İ£¬°üÀ¨¼ÓËÙ¶È¡¢ÍÓÂİÒÇºÍÎÂ¶È
+* @details:    	ï¿½ï¿½È¡BMI088ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½İ£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ù¶È¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Çºï¿½ï¿½Â¶ï¿½
 ************************************************************************
 **/
 void BMI088_read(float gyro[3], float accel[3], float *temperate)
@@ -320,14 +361,138 @@ void BMI088_read(float gyro[3], float accel[3], float *temperate)
     *temperate = bmi088_raw_temp * BMI088_TEMP_FACTOR + BMI088_TEMP_OFFSET;
 }
 
+/* â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•
+ * IMU2 å‡½æ•°ï¼ˆç¬¬äºŒä¸ª BMI088ï¼ŒCS = PC4/PC6ï¼Œå…±äº« SPI2 æ€»çº¿ï¼‰
+ * â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â•â• */
+
+uint8_t bmi088_accel2_init(void)
+{
+    uint8_t res = 0;
+    uint8_t write_reg_num = 0;
+
+    BMI088_accel2_read_single_reg(BMI088_ACC_CHIP_ID, res);
+    BMI088_delay_us(BMI088_COM_WAIT_SENSOR_TIME);
+    BMI088_accel2_read_single_reg(BMI088_ACC_CHIP_ID, res);
+    BMI088_delay_us(BMI088_COM_WAIT_SENSOR_TIME);
+
+    BMI088_accel2_write_single_reg(BMI088_ACC_SOFTRESET, BMI088_ACC_SOFTRESET_VALUE);
+    BMI088_delay_ms(BMI088_LONG_DELAY_TIME);
+
+    BMI088_accel2_read_single_reg(BMI088_ACC_CHIP_ID, res);
+    BMI088_delay_us(BMI088_COM_WAIT_SENSOR_TIME);
+    BMI088_accel2_read_single_reg(BMI088_ACC_CHIP_ID, res);
+    BMI088_delay_us(BMI088_COM_WAIT_SENSOR_TIME);
+
+    if (res != BMI088_ACC_CHIP_ID_VALUE)
+    {
+        return BMI088_NO_SENSOR;
+    }
+
+    for (write_reg_num = 0; write_reg_num < BMI088_WRITE_ACCEL_REG_NUM; write_reg_num++)
+    {
+        BMI088_accel2_write_single_reg(write_BMI088_accel_reg_data_error[write_reg_num][0],
+                                        write_BMI088_accel_reg_data_error[write_reg_num][1]);
+        BMI088_delay_us(BMI088_COM_WAIT_SENSOR_TIME);
+        BMI088_accel2_read_single_reg(write_BMI088_accel_reg_data_error[write_reg_num][0], res);
+        BMI088_delay_us(BMI088_COM_WAIT_SENSOR_TIME);
+        if (res != write_BMI088_accel_reg_data_error[write_reg_num][1])
+        {
+            return write_BMI088_accel_reg_data_error[write_reg_num][2];
+        }
+    }
+    return BMI088_NO_ERROR;
+}
+
+uint8_t bmi088_gyro2_init(void)
+{
+    uint8_t write_reg_num = 0;
+    uint8_t res = 0;
+
+    BMI088_gyro2_read_single_reg(BMI088_GYRO_CHIP_ID, res);
+    BMI088_delay_us(BMI088_COM_WAIT_SENSOR_TIME);
+    BMI088_gyro2_read_single_reg(BMI088_GYRO_CHIP_ID, res);
+    BMI088_delay_us(BMI088_COM_WAIT_SENSOR_TIME);
+
+    BMI088_gyro2_write_single_reg(BMI088_GYRO_SOFTRESET, BMI088_GYRO_SOFTRESET_VALUE);
+    BMI088_delay_ms(BMI088_LONG_DELAY_TIME);
+
+    BMI088_gyro2_read_single_reg(BMI088_GYRO_CHIP_ID, res);
+    BMI088_delay_us(BMI088_COM_WAIT_SENSOR_TIME);
+    BMI088_gyro2_read_single_reg(BMI088_GYRO_CHIP_ID, res);
+    BMI088_delay_us(BMI088_COM_WAIT_SENSOR_TIME);
+
+    if (res != BMI088_GYRO_CHIP_ID_VALUE)
+    {
+        return BMI088_NO_SENSOR;
+    }
+
+    for (write_reg_num = 0; write_reg_num < BMI088_WRITE_GYRO_REG_NUM; write_reg_num++)
+    {
+        BMI088_gyro2_write_single_reg(write_BMI088_gyro_reg_data_error[write_reg_num][0],
+                                       write_BMI088_gyro_reg_data_error[write_reg_num][1]);
+        BMI088_delay_us(BMI088_COM_WAIT_SENSOR_TIME);
+        BMI088_gyro2_read_single_reg(write_BMI088_gyro_reg_data_error[write_reg_num][0], res);
+        BMI088_delay_us(BMI088_COM_WAIT_SENSOR_TIME);
+        if (res != write_BMI088_gyro_reg_data_error[write_reg_num][1])
+        {
+            return write_BMI088_gyro_reg_data_error[write_reg_num][2];
+        }
+    }
+    return BMI088_NO_ERROR;
+}
+
+uint8_t BMI088_init2(void)
+{
+    uint8_t error = BMI088_NO_ERROR;
+    error |= bmi088_accel2_init();
+    error |= bmi088_gyro2_init();
+    return error;
+}
+
+void BMI088_read2(float gyro[3], float accel[3], float *temperate)
+{
+    uint8_t buf[8] = {0, 0, 0, 0, 0, 0};
+    int16_t bmi088_raw_temp;
+
+    BMI088_accel2_read_muli_reg(BMI088_ACCEL_XOUT_L, buf, 6);
+
+    bmi088_raw_temp = (int16_t)((buf[1]) << 8) | buf[0];
+    accel[0] = bmi088_raw_temp * BMI088_ACCEL_SEN;
+    bmi088_raw_temp = (int16_t)((buf[3]) << 8) | buf[2];
+    accel[1] = bmi088_raw_temp * BMI088_ACCEL_SEN;
+    bmi088_raw_temp = (int16_t)((buf[5]) << 8) | buf[4];
+    accel[2] = bmi088_raw_temp * BMI088_ACCEL_SEN;
+
+    BMI088_gyro2_read_muli_reg(BMI088_GYRO_CHIP_ID, buf, 8);
+    if(buf[0] == BMI088_GYRO_CHIP_ID_VALUE)
+    {
+        bmi088_raw_temp = (int16_t)((buf[3]) << 8) | buf[2];
+        gyro[0] = bmi088_raw_temp * BMI088_GYRO_SEN;
+        bmi088_raw_temp = (int16_t)((buf[5]) << 8) | buf[4];
+        gyro[1] = bmi088_raw_temp * BMI088_GYRO_SEN;
+        bmi088_raw_temp = (int16_t)((buf[7]) << 8) | buf[6];
+        gyro[2] = bmi088_raw_temp * BMI088_GYRO_SEN;
+    }
+    BMI088_accel2_read_muli_reg(BMI088_TEMP_M, buf, 2);
+
+    bmi088_raw_temp = (int16_t)((buf[0] << 3) | (buf[1] >> 5));
+
+    if (bmi088_raw_temp > 1023)
+    {
+        bmi088_raw_temp -= 2048;
+    }
+
+    *temperate = bmi088_raw_temp * BMI088_TEMP_FACTOR + BMI088_TEMP_OFFSET;
+}
+
 #if defined(BMI088_USE_SPI)
 /**
 ************************************************************************
 * @brief:      	BMI088_write_single_reg(uint8_t reg, uint8_t data)
-* @param:       reg - ¼Ä´æÆ÷µØÖ·
-* @param:       data - Ğ´ÈëµÄÊı¾İ
+* @param:       reg - ï¿½Ä´ï¿½ï¿½ï¿½ï¿½ï¿½Ö·
+* @param:       data - Ğ´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 * @retval:     	void
-* @details:    	ÏòBMI088´«¸ĞÆ÷Ğ´Èëµ¥¸ö¼Ä´æÆ÷µÄÊı¾İ
+* @details:    	ï¿½ï¿½BMI088ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ğ´ï¿½ëµ¥ï¿½ï¿½ï¿½Ä´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 ************************************************************************
 **/
 static void BMI088_write_single_reg(uint8_t reg, uint8_t data)
@@ -338,10 +503,10 @@ static void BMI088_write_single_reg(uint8_t reg, uint8_t data)
 /**
 ************************************************************************
 * @brief:      	BMI088_read_single_reg(uint8_t reg, uint8_t *return_data)
-* @param:       reg - ¼Ä´æÆ÷µØÖ·
-* @param:       return_data - ¶ÁÈ¡µÄ¼Ä´æÆ÷Êı¾İ
+* @param:       reg - ï¿½Ä´ï¿½ï¿½ï¿½ï¿½ï¿½Ö·
+* @param:       return_data - ï¿½ï¿½È¡ï¿½Ä¼Ä´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 * @retval:     	void
-* @details:    	´ÓBMI088´«¸ĞÆ÷¶ÁÈ¡µ¥¸ö¼Ä´æÆ÷µÄÊı¾İ
+* @details:    	ï¿½ï¿½BMI088ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½ï¿½Ä´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 ************************************************************************
 **/
 static void BMI088_read_single_reg(uint8_t reg, uint8_t *return_data)
@@ -365,11 +530,11 @@ static void BMI088_read_single_reg(uint8_t reg, uint8_t *return_data)
 /**
 ************************************************************************
 * @brief:      	BMI088_read_muli_reg(uint8_t reg, uint8_t *buf, uint8_t len)
-* @param:       reg - ÆğÊ¼¼Ä´æÆ÷µØÖ·
-*               buf - ´æ´¢¶ÁÈ¡Êı¾İµÄ»º³åÇø
-*               len - Òª¶ÁÈ¡µÄ×Ö½ÚÊı
+* @param:       reg - ï¿½ï¿½Ê¼ï¿½Ä´ï¿½ï¿½ï¿½ï¿½ï¿½Ö·
+*               buf - ï¿½æ´¢ï¿½ï¿½È¡ï¿½ï¿½ï¿½İµÄ»ï¿½ï¿½ï¿½ï¿½ï¿½
+*               len - Òªï¿½ï¿½È¡ï¿½ï¿½ï¿½Ö½ï¿½ï¿½ï¿½
 * @retval:     	void
-* @details:    	´ÓBMI088´«¸ĞÆ÷Á¬Ğø¶ÁÈ¡¶à¸ö¼Ä´æÆ÷µÄÊı¾İ
+* @details:    	ï¿½ï¿½BMI088ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½Ä´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 ************************************************************************
 **/
 static void BMI088_read_muli_reg(uint8_t reg, uint8_t *buf, uint8_t len)

@@ -63,10 +63,16 @@ void Error_Handler(void);
 #define POWER_24V_1_GPIO_Port GPIOC
 #define POWER_5V_Pin GPIO_PIN_15
 #define POWER_5V_GPIO_Port GPIOC
+#define MAGNET_RELAY_Pin GPIO_PIN_13
+#define MAGNET_RELAY_GPIO_Port GPIOE
 #define ACC_CS_Pin GPIO_PIN_0
 #define ACC_CS_GPIO_Port GPIOC
 #define GYRO_CS_Pin GPIO_PIN_3
 #define GYRO_CS_GPIO_Port GPIOC
+#define ACC2_CS_Pin GPIO_PIN_4
+#define ACC2_CS_GPIO_Port GPIOC
+#define GYRO2_CS_Pin GPIO_PIN_6
+#define GYRO2_CS_GPIO_Port GPIOC
 #define DCMI_PWDN_Pin GPIO_PIN_5
 #define DCMI_PWDN_GPIO_Port GPIOC
 #define ACC_INT_Pin GPIO_PIN_10

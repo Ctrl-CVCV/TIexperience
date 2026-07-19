@@ -25,7 +25,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "uart_task.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -162,7 +162,9 @@ void MX_FREERTOS_Init(void) {
   VisionTaskHandle = osThreadCreate(osThread(VisionTask), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */
-  /* add threads, ... */
+  /* definition and creation of UartDemo (UART7 DMA idle-line RX demo) */
+  osThreadDef(UartDemo, UartDemoTask_Entry, osPriorityNormal, 0, 256);
+  osThreadCreate(osThread(UartDemo), NULL);
   /* USER CODE END RTOS_THREADS */
 
 }

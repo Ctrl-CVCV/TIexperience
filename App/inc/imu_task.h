@@ -8,5 +8,6 @@
 #define INS_ROLL_ADDRESS_OFFSET   2
 
 extern float imuAngle[3];
+extern float g_shaft_angle;       /* IMU 轴角度 */
 
 #endif

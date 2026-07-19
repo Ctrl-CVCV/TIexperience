@@ -96,6 +96,11 @@ extern uint8_t bmi088_gyro_init(void);
 
 extern void BMI088_read(float gyro[3], float accel[3], float *temperate);
 
+extern uint8_t BMI088_init2(void);
+extern uint8_t bmi088_accel2_init(void);
+extern uint8_t bmi088_gyro2_init(void);
+extern void BMI088_read2(float gyro[3], float accel[3], float *temperate);
+
 
 
 #endif

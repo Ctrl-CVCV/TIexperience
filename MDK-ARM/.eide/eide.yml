@@ -123,12 +123,14 @@ virtualFolder:
         - path: ../Bsp/jc4310.c
         - path: ../Bsp/pid.c
         - path: ../Bsp/qd4310.c
+        - path: ../Bsp/uart_bsp.c
       folders: []
     - name: App
       files:
         - path: ../App/imu_task.c
         - path: ../App/fun_test_task.c
         - path: ../App/vision_task.c
+        - path: ../App/uart_task.c
       folders: []
     - name: Algprithm
       files:
