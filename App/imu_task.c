@@ -17,7 +17,7 @@
 /* motor1 三个方向对应角度 (rad) */
 #define MOTOR1_ANGLE_FRONT   0.25f
 #define MOTOR1_ANGLE_LEFT    2.5f
-#define MOTOR1_ANGLE_RIGHT   6.2f
+#define MOTOR1_ANGLE_RIGHT   4.2f
 
 /* PC13 电机固定角度 = 4.51 rad */
 #define PC13_FIXED_ANGLE      4.51f
