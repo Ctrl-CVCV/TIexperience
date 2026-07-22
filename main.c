@@ -67,7 +67,7 @@ int main(void)
     SYSCFG_DL_init();
     motor_init();
     encoder_init();
-    uart_dma_init();
+    uart0_dma_init();
 
     /* Init PIDs — output clamped to 30% duty */
     PID_Init(&g_pid_a, PID_A_KP, PID_A_KI, PID_A_KD, (float)PWM_LIMIT);
@@ -103,13 +103,13 @@ int main(void)
         motor_b_run((int16_t)g_pwm_b);
 
         /* UART: rpm_a,rpm_b */
-        if (!uart_dma_is_busy()) {
+        if (!uart0_dma_is_busy()) {
             p = g_msg;
             p = itoa(p, rpm_a);
             *p++ = ',';
             p = itoa(p, rpm_b);
             *p++ = '\n';
-            uart_dma_send((const uint8_t *)g_msg, (uint16_t)(p - g_msg));
+            uart0_dma_send((const uint8_t *)g_msg, (uint16_t)(p - g_msg));
         }
     }
 }

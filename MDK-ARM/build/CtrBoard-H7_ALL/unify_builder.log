@@ -1,0 +1,112 @@
+[2026-07-19 15:12:26]	[info] incremental build: 80 source files changed
+These source files will be recompiled
+---
+'f:\TIexperience\Algorithm\MahonyAHRS.c': object (.o) file not exist
+'f:\TIexperience\Algorithm\user_lib.c': object (.o) file not exist
+'f:\TIexperience\App\fun_test_task.c': object (.o) file not exist
+'f:\TIexperience\App\imu_task.c': object (.o) file not exist
+'f:\TIexperience\App\uart_task.c': object (.o) file not exist
+'f:\TIexperience\Bsp\BMI088Middleware.c': object (.o) file not exist
+'f:\TIexperience\Bsp\BMI088driver.c': object (.o) file not exist
+'f:\TIexperience\Bsp\bsp_buzzer.c': object (.o) file not exist
+'f:\TIexperience\Bsp\bsp_user_key.c': object (.o) file not exist
+'f:\TIexperience\Bsp\can_bsp.c': object (.o) file not exist
+'f:\TIexperience\Bsp\jc4310.c': object (.o) file not exist
+'f:\TIexperience\Bsp\lcd.c': object (.o) file not exist
+'f:\TIexperience\Bsp\pid.c': object (.o) file not exist
+'f:\TIexperience\Bsp\qd4310.c': object (.o) file not exist
+'f:\TIexperience\Bsp\uart_bsp.c': object (.o) file not exist
+'f:\TIexperience\Bsp\w25q64.c': object (.o) file not exist
+'f:\TIexperience\Bsp\ws2812.c': object (.o) file not exist
+'f:\TIexperience\Core\Src\adc.c': object (.o) file not exist
+'f:\TIexperience\Core\Src\dma.c': object (.o) file not exist
+'f:\TIexperience\Core\Src\fdcan.c': object (.o) file not exist
+'f:\TIexperience\Core\Src\freertos.c': object (.o) file not exist
+'f:\TIexperience\Core\Src\gpio.c': object (.o) file not exist
+'f:\TIexperience\Core\Src\main.c': object (.o) file not exist
+'f:\TIexperience\Core\Src\octospi.c': object (.o) file not exist
+'f:\TIexperience\Core\Src\spi.c': object (.o) file not exist
+'f:\TIexperience\Core\Src\stm32h7xx_hal_msp.c': object (.o) file not exist
+'f:\TIexperience\Core\Src\stm32h7xx_hal_timebase_tim.c': object (.o) file not exist
+'f:\TIexperience\Core\Src\stm32h7xx_it.c': object (.o) file not exist
+'f:\TIexperience\Core\Src\system_stm32h7xx.c': object (.o) file not exist
+'f:\TIexperience\Core\Src\tim.c': object (.o) file not exist
+'f:\TIexperience\Core\Src\usart.c': object (.o) file not exist
+'f:\TIexperience\Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal.c': object (.o) file not exist
+'f:\TIexperience\Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_adc.c': object (.o) file not exist
+'f:\TIexperience\Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_adc_ex.c': object (.o) file not exist
+'f:\TIexperience\Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_cortex.c': object (.o) file not exist
+'f:\TIexperience\Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_dma.c': object (.o) file not exist
+'f:\TIexperience\Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_dma_ex.c': object (.o) file not exist
+'f:\TIexperience\Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_exti.c': object (.o) file not exist
+'f:\TIexperience\Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_fdcan.c': object (.o) file not exist
+'f:\TIexperience\Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_flash.c': object (.o) file not exist
+'f:\TIexperience\Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_flash_ex.c': object (.o) file not exist
+'f:\TIexperience\Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_gpio.c': object (.o) file not exist
+'f:\TIexperience\Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_hsem.c': object (.o) file not exist
+'f:\TIexperience\Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_i2c.c': object (.o) file not exist
+'f:\TIexperience\Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_i2c_ex.c': object (.o) file not exist
+'f:\TIexperience\Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_mdma.c': object (.o) file not exist
+'f:\TIexperience\Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_ospi.c': object (.o) file not exist
+'f:\TIexperience\Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_pcd.c': object (.o) file not exist
+'f:\TIexperience\Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_pcd_ex.c': object (.o) file not exist
+'f:\TIexperience\Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_pwr.c': object (.o) file not exist
+'f:\TIexperience\Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_pwr_ex.c': object (.o) file not exist
+'f:\TIexperience\Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_rcc.c': object (.o) file not exist
+'f:\TIexperience\Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_rcc_ex.c': object (.o) file not exist
+'f:\TIexperience\Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_spi.c': object (.o) file not exist
+'f:\TIexperience\Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_spi_ex.c': object (.o) file not exist
+'f:\TIexperience\Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_tim.c': object (.o) file not exist
+'f:\TIexperience\Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_tim_ex.c': object (.o) file not exist
+'f:\TIexperience\Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_uart.c': object (.o) file not exist
+'f:\TIexperience\Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_hal_uart_ex.c': object (.o) file not exist
+'f:\TIexperience\Drivers\STM32H7xx_HAL_Driver\Src\stm32h7xx_ll_usb.c': object (.o) file not exist
+'f:\TIexperience\Middlewares\ST\STM32_USB_Device_Library\Class\CDC\Src\usbd_cdc.c': object (.o) file not exist
+'f:\TIexperience\Middlewares\ST\STM32_USB_Device_Library\Core\Src\usbd_core.c': object (.o) file not exist
+'f:\TIexperience\Middlewares\ST\STM32_USB_Device_Library\Core\Src\usbd_ctlreq.c': object (.o) file not exist
+'f:\TIexperience\Middlewares\ST\STM32_USB_Device_Library\Core\Src\usbd_ioreq.c': object (.o) file not exist
+'f:\TIexperience\Middlewares\Third_Party\FreeRTOS\Source\CMSIS_RTOS\cmsis_os.c': object (.o) file not exist
+'f:\TIexperience\Middlewares\Third_Party\FreeRTOS\Source\croutine.c': object (.o) file not exist
+'f:\TIexperience\Middlewares\Third_Party\FreeRTOS\Source\event_groups.c': object (.o) file not exist
+'f:\TIexperience\Middlewares\Third_Party\FreeRTOS\Source\list.c': object (.o) file not exist
+'f:\TIexperience\Middlewares\Third_Party\FreeRTOS\Source\portable\MemMang\heap_4.c': object (.o) file not exist
+'f:\TIexperience\Middlewares\Third_Party\FreeRTOS\Source\portable\RVDS\ARM_CM4F\port.c': object (.o) file not exist
+'f:\TIexperience\Middlewares\Third_Party\FreeRTOS\Source\queue.c': object (.o) file not exist
+'f:\TIexperience\Middlewares\Third_Party\FreeRTOS\Source\stream_buffer.c': object (.o) file not exist
+'f:\TIexperience\Middlewares\Third_Party\FreeRTOS\Source\tasks.c': object (.o) file not exist
+'f:\TIexperience\Middlewares\Third_Party\FreeRTOS\Source\timers.c': object (.o) file not exist
+'f:\TIexperience\USB_DEVICE\App\usb_device.c': object (.o) file not exist
+'f:\TIexperience\USB_DEVICE\App\usbd_cdc_if.c': object (.o) file not exist
+'f:\TIexperience\USB_DEVICE\App\usbd_desc.c': object (.o) file not exist
+'f:\TIexperience\USB_DEVICE\Target\usbd_conf.c': object (.o) file not exist
+'f:\TIexperience\vofa+\vofa.c': object (.o) file not exist
+'f:\TIexperience\MDK-ARM\startup_stm32h723xx.s': object (.o) file not exist
+
+[2026-07-19 15:12:44]	[done]
+	build successfully !
+
+[2026-07-19 15:17:05]	[done]
+	build successfully !
+
+[2026-07-19 15:17:23]	[done]
+	build successfully !
+
+[2026-07-19 16:47:54]	[info] incremental build: 1 source files changed
+These source files will be recompiled
+---
+'f:\TIexperience\App\imu_task.c': source file has been changed.
+
+[2026-07-19 16:48:01]	[done]
+	build successfully !
+
+[2026-07-19 16:51:45]	[done]
+	build successfully !
+
+[2026-07-19 20:13:48]	[info] incremental build: 1 source files changed
+These source files will be recompiled
+---
+'f:\TIexperience\App\imu_task.c': source file has been changed.
+
+[2026-07-19 20:13:51]	[done]
+	build successfully !
+

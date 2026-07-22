@@ -4,8 +4,14 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-void uart_dma_init(void);
-bool uart_dma_send(const uint8_t *data, uint16_t len);
-bool uart_dma_is_busy(void);
+/* UART0 (UART_0) DMA TX */
+void uart0_dma_init(void);
+bool uart0_dma_send(const uint8_t *data, uint16_t len);
+bool uart0_dma_is_busy(void);
+
+/* UART1 (UART_1) DMA TX */
+void uart1_dma_init(void);
+bool uart1_dma_send(const uint8_t *data, uint16_t len);
+bool uart1_dma_is_busy(void);
 
 #endif

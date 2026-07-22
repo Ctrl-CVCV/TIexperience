@@ -72,7 +72,7 @@
           <BeforeMake>
             <RunUserProg1>1</RunUserProg1>
             <RunUserProg2>0</RunUserProg2>
-            <UserProg1Name>cmd.exe /C "D:\TI\CCS2051\ccs\utils\sysconfig_1.27.1\sysconfig_cli.bat" --product "D:\TI\CCS2051\mspm0_sdk_2_10_00_04\.metadata\product.json" --device MSPM0G3519 --package "LQFP-80(PN)" --script "D:\BaiduNetdiskDownload\EVM_V2.0_Material_G3519\02_Demonstration\Experimental_Guide_Code\MyG3519Code\05_1_UART\project.syscfg" --output "D:\BaiduNetdiskDownload\EVM_V2.0_Material_G3519\02_Demonstration\Experimental_Guide_Code\MyG3519Code\05_1_UART\keil"</UserProg1Name>
+            <UserProg1Name>cmd.exe /C "D:\TI\CCS2051\ccs\utils\sysconfig_1.27.1\sysconfig_cli.bat" --product "D:\TI\CCS2051\mspm0_sdk_2_10_00_04\.metadata\product.json" --device MSPM0G3519 --package "LQFP-80(PN)" --script "f:\TIexperience\project.syscfg" --output "f:\TIexperience\keil"</UserProg1Name>
             <UserProg2Name></UserProg2Name>
             <UserProg1Dos16Mode>0</UserProg1Dos16Mode>
             <UserProg2Dos16Mode>0</UserProg2Dos16Mode>
