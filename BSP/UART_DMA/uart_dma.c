@@ -20,7 +20,7 @@ void uart0_dma_init(void)
         .srcIncrement  = DL_DMA_ADDR_INCREMENT,   /* memory buffer: inc  */
         .destWidth     = DL_DMA_WIDTH_BYTE,
         .srcWidth      = DL_DMA_WIDTH_BYTE,
-        .trigger       = UART_0_INST_DMA_TRIGGER,
+        .trigger       = UART_0_INST_DMA_TRIGGER_0,
         .triggerType   = DL_DMA_TRIGGER_TYPE_EXTERNAL,
     };
 
@@ -51,8 +51,6 @@ bool uart0_dma_send(const uint8_t *data, uint16_t len)
 
 /* ========== UART1 (UART_1, PB6/PB5, DMA_CH4) ========== */
 
-#ifdef UART_1_INST
-
 void uart1_dma_init(void)
 {
     DL_DMA_Config cfg = {
@@ -62,7 +60,7 @@ void uart1_dma_init(void)
         .srcIncrement  = DL_DMA_ADDR_INCREMENT,
         .destWidth     = DL_DMA_WIDTH_BYTE,
         .srcWidth      = DL_DMA_WIDTH_BYTE,
-        .trigger       = UART_1_INST_DMA_TRIGGER_TX,
+        .trigger       = UART_1_INST_DMA_TRIGGER_1,
         .triggerType   = DL_DMA_TRIGGER_TYPE_EXTERNAL,
     };
 
@@ -90,11 +88,3 @@ bool uart1_dma_send(const uint8_t *data, uint16_t len)
     DL_DMA_enableChannel(DMA, DMA_CH4_CHAN_ID);
     return true;
 }
-
-#else /* UART_1_INST not defined — SysConfig not yet regenerated */
-
-void uart1_dma_init(void)     { /* TODO: rebuild after fixing SysConfig pre-build path */ }
-bool uart1_dma_is_busy(void)  { return true; }
-bool uart1_dma_send(const uint8_t *data, uint16_t len) { (void)data; (void)len; return false; }
-
-#endif
