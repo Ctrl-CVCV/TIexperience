@@ -171,17 +171,33 @@ bool SYSCFG_DL_SYSCTL_SYSPLL_init(void);
 #define UART_1_INST_FREQUENCY                                           40000000
 #define UART_1_INST_IRQHandler                                  UART1_IRQHandler
 #define UART_1_INST_INT_IRQN                                      UART1_INT_IRQn
-#define GPIO_UART_1_RX_PORT                                                GPIOB
-#define GPIO_UART_1_TX_PORT                                                GPIOB
-#define GPIO_UART_1_RX_PIN                                         DL_GPIO_PIN_5
-#define GPIO_UART_1_TX_PIN                                         DL_GPIO_PIN_6
-#define GPIO_UART_1_IOMUX_RX                                     (IOMUX_PINCM18)
-#define GPIO_UART_1_IOMUX_TX                                     (IOMUX_PINCM23)
-#define GPIO_UART_1_IOMUX_RX_FUNC                      IOMUX_PINCM18_PF_UART1_RX
-#define GPIO_UART_1_IOMUX_TX_FUNC                      IOMUX_PINCM23_PF_UART1_TX
+#define GPIO_UART_1_RX_PORT                                                GPIOA
+#define GPIO_UART_1_TX_PORT                                                GPIOA
+#define GPIO_UART_1_RX_PIN                                         DL_GPIO_PIN_6
+#define GPIO_UART_1_TX_PIN                                         DL_GPIO_PIN_5
+#define GPIO_UART_1_IOMUX_RX                                     (IOMUX_PINCM11)
+#define GPIO_UART_1_IOMUX_TX                                     (IOMUX_PINCM10)
+#define GPIO_UART_1_IOMUX_RX_FUNC                      IOMUX_PINCM11_PF_UART1_RX
+#define GPIO_UART_1_IOMUX_TX_FUNC                      IOMUX_PINCM10_PF_UART1_TX
 #define UART_1_BAUD_RATE                                                (115200)
 #define UART_1_IBRD_40_MHZ_115200_BAUD                                      (21)
 #define UART_1_FBRD_40_MHZ_115200_BAUD                                      (45)
+/* Defines for UART_4 */
+#define UART_4_INST                                                        UART4
+#define UART_4_INST_FREQUENCY                                           80000000
+#define UART_4_INST_IRQHandler                                  UART4_IRQHandler
+#define UART_4_INST_INT_IRQN                                      UART4_INT_IRQn
+#define GPIO_UART_4_RX_PORT                                                GPIOB
+#define GPIO_UART_4_TX_PORT                                                GPIOB
+#define GPIO_UART_4_RX_PIN                                        DL_GPIO_PIN_11
+#define GPIO_UART_4_TX_PIN                                        DL_GPIO_PIN_10
+#define GPIO_UART_4_IOMUX_RX                                     (IOMUX_PINCM28)
+#define GPIO_UART_4_IOMUX_TX                                     (IOMUX_PINCM27)
+#define GPIO_UART_4_IOMUX_RX_FUNC                      IOMUX_PINCM28_PF_UART4_RX
+#define GPIO_UART_4_IOMUX_TX_FUNC                      IOMUX_PINCM27_PF_UART4_TX
+#define UART_4_BAUD_RATE                                                (115200)
+#define UART_4_IBRD_80_MHZ_115200_BAUD                                      (43)
+#define UART_4_FBRD_80_MHZ_115200_BAUD                                      (26)
 
 
 
@@ -231,6 +247,12 @@ bool SYSCFG_DL_SYSCTL_SYSPLL_init(void);
 /* Defines for DMA_CH4 */
 #define DMA_CH4_CHAN_ID                                                      (4)
 #define UART_1_INST_DMA_TRIGGER_1                            (DMA_UART1_TX_TRIG)
+/* Defines for DMA_CH5 */
+#define DMA_CH5_CHAN_ID                                                      (5)
+#define UART_4_INST_DMA_TRIGGER_0                            (DMA_UART4_RX_TRIG)
+/* Defines for DMA_CH2 */
+#define DMA_CH2_CHAN_ID                                                      (2)
+#define UART_4_INST_DMA_TRIGGER_1                            (DMA_UART4_TX_TRIG)
 
 
 /* Port definition for Pin Group Key */
@@ -299,6 +321,7 @@ void SYSCFG_DL_TIMER_7_init(void);
 void SYSCFG_DL_TIMER_12_init(void);
 void SYSCFG_DL_UART_0_init(void);
 void SYSCFG_DL_UART_1_init(void);
+void SYSCFG_DL_UART_4_init(void);
 void SYSCFG_DL_SPI_0_init(void);
 void SYSCFG_DL_SPI_1_init(void);
 void SYSCFG_DL_DMA_init(void);

@@ -14,4 +14,9 @@ void uart1_dma_init(void);
 bool uart1_dma_send(const uint8_t *data, uint16_t len);
 bool uart1_dma_is_busy(void);
 
+/* UART4 (UART_4) DMA TX */
+void uart4_dma_init(void);
+bool uart4_dma_send(const uint8_t *data, uint16_t len);
+bool uart4_dma_is_busy(void);
+
 #endif

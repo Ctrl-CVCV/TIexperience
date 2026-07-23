@@ -8,6 +8,7 @@
 #include "BSP/Encoder/encoder.h"
 #include "BSP/Encoder/pid.h"
 #include "BSP/UART_DMA/uart_dma.h"
+#include "BSP/SPI0_OLED/spi0_oled.h"
 
 /* ========== PID Parameters (TUNE HERE) ========== */
 #define PID_A_KP   0.00f
@@ -68,13 +69,25 @@ int main(void)
     motor_init();
     encoder_init();
     uart0_dma_init();
+    uart4_dma_init();
 
-    /* Init PIDs — output clamped to 30% duty */
+    /* PB11 (UART4 RX) 改为 GPIO 输入上拉，防止浮空噪声灌满 RX FIFO */
+    DL_GPIO_initDigitalInput(GPIO_UART_4_IOMUX_RX);
+    DL_GPIO_initDigitalInputFeatures(GPIO_UART_4_IOMUX_RX,
+             DL_GPIO_INVERSION_DISABLE, DL_GPIO_RESISTOR_PULL_UP,
+             DL_GPIO_HYSTERESIS_DISABLE, DL_GPIO_WAKEUP_DISABLE);
+
+    /* OLED */
+    OLED_Init();
+    OLED_Clear();
+    OLED_ShowString(0, 0, (u8 *)"OLED OK");
+    OLED_ShowString(0, 2, (u8 *)"U4 DMA ready");
+
+    /* Init PIDs */
     PID_Init(&g_pid_a, PID_A_KP, PID_A_KI, PID_A_KD, (float)PWM_LIMIT);
     PID_Init(&g_pid_b, PID_B_KP, PID_B_KI, PID_B_KD, (float)PWM_LIMIT);
 
-    /* Set up TIMER_7 for periodic 200Hz (5ms)
-     * TIMER_7 clk = 80MHz/8 = 10MHz. period = 0.005*10M-1 = 49999 */
+    /* TIMER_7: 200Hz */
     {
         DL_TimerG_TimerConfig cfg = {
             .period    = 49999,
@@ -88,28 +101,38 @@ int main(void)
     }
 
     while (1) {
-        /* Wait for next 200Hz tick */
         while (!g_ctrl_tick) { /* spin */ }
         g_ctrl_tick = false;
 
-        rpm_a = encoder_b_get_rpm_filt();  /* QEI_1 → Motor A */
-        rpm_b = encoder_a_get_rpm_filt();  /* QEI_0 → Motor B */
+        rpm_a = encoder_b_get_rpm_filt();
+        rpm_b = encoder_a_get_rpm_filt();
 
-        /* Open-loop PWM — no PID */
         g_pwm_a = 200;
         g_pwm_b = 200;
-
         motor_a_run((int16_t)g_pwm_a);
         motor_b_run((int16_t)g_pwm_b);
 
-        /* UART: rpm_a,rpm_b */
-        if (!uart0_dma_is_busy()) {
+        /* UART4 DMA: rpm_a,rpm_b (PB10, 硬件 UART4) */
+        if (!uart4_dma_is_busy()) {
             p = g_msg;
             p = itoa(p, rpm_a);
             *p++ = ',';
             p = itoa(p, rpm_b);
             *p++ = '\n';
-            uart0_dma_send((const uint8_t *)g_msg, (uint16_t)(p - g_msg));
+            uart4_dma_send((const uint8_t *)g_msg, (uint16_t)(p - g_msg));
+        }
+
+        /* OLED: 显示 RPM */
+        {
+            char buf[16];
+            OLED_ShowString(0, 4, (u8 *)"A:");
+            p = itoa(buf, rpm_a);
+            *p = '\0';
+            OLED_ShowString(16, 4, (u8 *)buf);
+            OLED_ShowString(0, 6, (u8 *)"B:");
+            p = itoa(buf, rpm_b);
+            *p = '\0';
+            OLED_ShowString(16, 6, (u8 *)buf);
         }
     }
 }

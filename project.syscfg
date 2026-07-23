@@ -34,6 +34,7 @@ const TIMER2 = TIMER.addInstance();
 const UART   = scripting.addModule("/ti/driverlib/UART", {}, false);
 const UART1  = UART.addInstance();
 const UART2  = UART.addInstance();
+const UART3  = UART.addInstance();
 
 /**
  * Write custom configuration values to the imported modules.
@@ -185,6 +186,7 @@ UART1.enabledInterrupts                 = ["RX"];
 UART1.targetBaudRate                    = 115200;
 UART1.enabledDMATXTriggers              = "DL_UART_DMA_INTERRUPT_TX";
 UART1.enabledDMARXTriggers              = "DL_UART_DMA_INTERRUPT_RX";
+UART1.enableFIFO                        = true;
 UART1.peripheral.rxPin.$assign          = "PA11";
 UART1.peripheral.txPin.$assign          = "PA10";
 UART1.txPinConfig.$name                 = "ti_driverlib_gpio_GPIOPinGeneric0";
@@ -199,9 +201,10 @@ UART2.$name                             = "UART_1";
 UART2.targetBaudRate                    = 115200;
 UART2.enabledDMARXTriggers              = "DL_UART_DMA_INTERRUPT_RX";
 UART2.enabledDMATXTriggers              = "DL_UART_DMA_INTERRUPT_TX";
+UART2.enableFIFO                        = true;
 UART2.peripheral.$assign                = "UART1";
-UART2.peripheral.rxPin.$assign          = "PB5";
-UART2.peripheral.txPin.$assign          = "PB6";
+UART2.peripheral.rxPin.$assign          = "PA6";
+UART2.peripheral.txPin.$assign          = "PA5";
 UART2.txPinConfig.$name                 = "ti_driverlib_gpio_GPIOPinGeneric13";
 UART2.rxPinConfig.$name                 = "ti_driverlib_gpio_GPIOPinGeneric14";
 UART2.DMA_CHANNEL_RX.enableInterrupt    = true;
@@ -211,6 +214,29 @@ UART2.DMA_CHANNEL_TX.enableInterrupt    = true;
 UART2.DMA_CHANNEL_TX.$name              = "DMA_CH4";
 UART2.DMA_CHANNEL_TX.peripheral.$assign = "DMA_CH4";
 
+UART3.$name                            = "UART_4";
+UART3.enabledDMARXTriggers             = "DL_UART_DMA_INTERRUPT_RX";
+UART3.enabledDMATXTriggers             = "DL_UART_DMA_INTERRUPT_TX";
+UART3.targetBaudRate                   = 115200;
+UART3.peripheral.$assign               = "UART4";
+UART3.peripheral.rxPin.$assign         = "PB11";
+UART3.peripheral.txPin.$assign         = "PB10";
+UART3.txPinConfig.$name                = "ti_driverlib_gpio_GPIOPinGeneric15";
+UART3.txPinConfig.direction            = scripting.forceWrite("OUTPUT");
+UART3.txPinConfig.hideOutputInversion  = scripting.forceWrite(false);
+UART3.txPinConfig.onlyInternalResistor = scripting.forceWrite(false);
+UART3.txPinConfig.passedPeripheralType = scripting.forceWrite("Digital");
+UART3.rxPinConfig.$name                = "ti_driverlib_gpio_GPIOPinGeneric16";
+UART3.rxPinConfig.hideOutputInversion  = scripting.forceWrite(false);
+UART3.rxPinConfig.onlyInternalResistor = scripting.forceWrite(false);
+UART3.rxPinConfig.passedPeripheralType = scripting.forceWrite("Digital");
+UART3.DMA_CHANNEL_RX.$name             = "DMA_CH5";
+UART3.DMA_CHANNEL_RX.enableInterrupt   = true;
+UART3.DMA_CHANNEL_RX.peripheral.$assign = "DMA_CH5";
+UART3.DMA_CHANNEL_TX.$name             = "DMA_CH2";
+UART3.DMA_CHANNEL_TX.enableInterrupt   = true;
+UART3.DMA_CHANNEL_TX.peripheral.$assign = "DMA_CH2";
+
 const ProjectConfig              = scripting.addModule("/ti/project_config/ProjectConfig", {}, false);
 ProjectConfig.migrationCondition = true;
 
@@ -219,5 +245,7 @@ ProjectConfig.migrationCondition = true;
  * version of the tool will not impact the pinmux you originally saw.  These lines can be completely deleted in order to
  * re-solve from scratch.
  */
-SPI1.peripheral.$suggestSolution  = "SPI0";
-UART1.peripheral.$suggestSolution = "UART0";
+SPI1.peripheral.$suggestSolution                 = "SPI0";
+UART1.peripheral.$suggestSolution                = "UART0";
+UART3.DMA_CHANNEL_RX.peripheral.$suggestSolution = "DMA_CH5";
+UART3.DMA_CHANNEL_TX.peripheral.$suggestSolution = "DMA_CH2";
