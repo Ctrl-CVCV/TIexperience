@@ -1,0 +1,35 @@
+# Local editor and workspace state
+.claude/
+.vscode/
+Event.dot
+
+# EIDE and Keil generated files
+keil/.pack/
+keil/.cmsis/
+keil/RTE/
+keil/RTE_Components.h
+keil/.vscode/
+keil/build/
+keil/Objects/
+keil/bin/
+keil/obj/
+keil/out/
+keil/.eide/log
+keil/.eide.usr.ctx.json
+keil/.vscode/launch.json
+keil/*.axf
+keil/*.hex
+keil/*.s19
+keil/*.map*
+keil/*.lnp
+keil/*.objlist
+keil/*.htm
+keil/*.bak
+keil/*.tmp
+keil/device.opt
+keil/device.cmd.genlibs
+keil/device.lds.genlibs
+keil/device_linker.cmd
+keil/device_linker.lds
+keil/Event.dot
+keil/*.uvguix.*
