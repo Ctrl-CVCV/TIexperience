@@ -177,21 +177,19 @@ SYSCONFIG_WEAK void SYSCFG_DL_GPIO_init(void)
 
     DL_GPIO_initDigitalOutput(IMU_CS_IMU_IOMUX);
 
-    DL_GPIO_initDigitalOutputFeatures(LED_L2_IOMUX,
-		 DL_GPIO_INVERSION_DISABLE, DL_GPIO_RESISTOR_PULL_UP,
-		 DL_GPIO_DRIVE_STRENGTH_LOW, DL_GPIO_HIZ_DISABLE);
-
     DL_GPIO_initDigitalOutputFeatures(LED_L1_IOMUX,
 		 DL_GPIO_INVERSION_DISABLE, DL_GPIO_RESISTOR_PULL_UP,
 		 DL_GPIO_DRIVE_STRENGTH_LOW, DL_GPIO_HIZ_DISABLE);
 
-    DL_GPIO_initDigitalOutput(OLED_RES_IOMUX);
-
-    DL_GPIO_initDigitalOutput(OLED_DC_IOMUX);
-
-    DL_GPIO_initDigitalOutputFeatures(OLED_CS_IOMUX,
+    DL_GPIO_initDigitalOutputFeatures(LED_L2_IOMUX,
 		 DL_GPIO_INVERSION_DISABLE, DL_GPIO_RESISTOR_PULL_UP,
 		 DL_GPIO_DRIVE_STRENGTH_LOW, DL_GPIO_HIZ_DISABLE);
+
+    DL_GPIO_initDigitalOutput(LCD_BLK_IOMUX);
+
+    DL_GPIO_initDigitalOutput(LCD_DC_IOMUX);
+
+    DL_GPIO_initDigitalOutput(LCD_RES_IOMUX);
 
     DL_GPIO_initDigitalOutput(ABIN_AIN1_IOMUX);
 
@@ -201,26 +199,26 @@ SYSCONFIG_WEAK void SYSCFG_DL_GPIO_init(void)
 
     DL_GPIO_initDigitalOutput(ABIN_BIN2_IOMUX);
 
-    DL_GPIO_clearPins(GPIOA, LED_L2_PIN |
-		LED_L1_PIN |
+    DL_GPIO_clearPins(GPIOA, LCD_BLK_PIN |
 		ABIN_BIN1_PIN |
-		ABIN_BIN2_PIN);
-    DL_GPIO_enableOutput(GPIOA, LED_L2_PIN |
-		LED_L1_PIN |
+		ABIN_BIN2_PIN |
+		LCD_DC_PIN);
+    DL_GPIO_enableOutput(GPIOA, LCD_BLK_PIN |
 		ABIN_BIN1_PIN |
-		ABIN_BIN2_PIN);
+		ABIN_BIN2_PIN |
+		LCD_DC_PIN);
     DL_GPIO_clearPins(GPIOB, IMU_CS_IMU_PIN |
-		OLED_RES_PIN |
+		LED_L1_PIN |
 		ABIN_AIN1_PIN |
 		ABIN_AIN2_PIN);
     DL_GPIO_enableOutput(GPIOB, IMU_CS_IMU_PIN |
-		OLED_RES_PIN |
+		LED_L1_PIN |
 		ABIN_AIN1_PIN |
 		ABIN_AIN2_PIN);
-    DL_GPIO_clearPins(GPIOC, OLED_DC_PIN |
-		OLED_CS_PIN);
-    DL_GPIO_enableOutput(GPIOC, OLED_DC_PIN |
-		OLED_CS_PIN);
+    DL_GPIO_clearPins(GPIOC, LCD_RES_PIN |
+		LED_L2_PIN);
+    DL_GPIO_enableOutput(GPIOC, LCD_RES_PIN |
+		LED_L2_PIN);
 
 }
 

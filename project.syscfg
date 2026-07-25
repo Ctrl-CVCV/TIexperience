@@ -53,12 +53,12 @@ mux10.inputSelect = "MFPCLKMUX_HFCLK";
 
 GPIO1.$name                              = "LED";
 GPIO1.associatedPins.create(2);
-GPIO1.associatedPins[0].$name            = "L2";
+GPIO1.associatedPins[0].$name            = "L1";
 GPIO1.associatedPins[0].internalResistor = "PULL_UP";
-GPIO1.associatedPins[0].pin.$assign      = "PA17";
-GPIO1.associatedPins[1].$name            = "L1";
+GPIO1.associatedPins[0].pin.$assign      = "PB19";
+GPIO1.associatedPins[1].$name            = "L2";
 GPIO1.associatedPins[1].internalResistor = "PULL_UP";
-GPIO1.associatedPins[1].pin.$assign      = "PA14";
+GPIO1.associatedPins[1].pin.$assign      = "PC7";
 
 const Board                       = scripting.addModule("/ti/driverlib/Board", {}, false);
 Board.peripheral.$assign          = "DEBUGSS";
@@ -71,46 +71,44 @@ GPIO2.associatedPins[0].direction        = "INPUT";
 GPIO2.associatedPins[0].internalResistor = "PULL_UP";
 GPIO2.associatedPins[0].pin.$assign      = "PB31";
 
-GPIO3.$name                              = "OLED";
+GPIO3.$name                              = "LCD";
 GPIO3.associatedPins.create(3);
-GPIO3.associatedPins[0].$name            = "RES";
-GPIO3.associatedPins[0].pin.$assign      = "PB23";
+GPIO3.associatedPins[0].$name            = "BLK";
+GPIO3.associatedPins[0].pin.$assign      = "PA7";
 GPIO3.associatedPins[1].$name            = "DC";
-GPIO3.associatedPins[1].pin.$assign      = "PC8";
-GPIO3.associatedPins[2].$name            = "CS";
-GPIO3.associatedPins[2].internalResistor = "PULL_UP";
-GPIO3.associatedPins[2].pin.$assign      = "PC9";
+GPIO3.associatedPins[1].pin.$assign      = "PA14";
+GPIO3.associatedPins[2].$name            = "RES";
+GPIO3.associatedPins[2].pin.$assign      = "PC0";
 
 GPIO4.$name                         = "IMU";
 GPIO4.associatedPins[0].$name       = "CS_IMU";
 GPIO4.associatedPins[0].pin.$assign = "PB12";
 
-GPIO5.$name                                 = "ABIN";
-GPIO5.associatedPins.create(4);
-GPIO5.associatedPins[0].$name               = "AIN1";
-GPIO5.associatedPins[0].ioStructure         = "SD";
-GPIO5.associatedPins[0].pin.$assign         = "PB20";
-GPIO5.associatedPins[1].$name               = "AIN2";
-GPIO5.associatedPins[1].ioStructure         = "SD";
-GPIO5.associatedPins[1].assignedPort        = "PORTB";
-GPIO5.associatedPins[1].assignedPortSegment = "Upper";
-GPIO5.associatedPins[1].pin.$assign         = "PB24";
-GPIO5.associatedPins[2].$name               = "BIN1";
-GPIO5.associatedPins[2].ioStructure         = "SD";
-GPIO5.associatedPins[2].assignedPort        = "PORTA";
-GPIO5.associatedPins[2].assignedPortSegment = "Lower";
-GPIO5.associatedPins[2].pin.$assign         = "PA8";
-GPIO5.associatedPins[3].$name               = "BIN2";
-GPIO5.associatedPins[3].assignedPort        = "PORTA";
-GPIO5.associatedPins[3].assignedPortSegment = "Lower";
-GPIO5.associatedPins[3].pin.$assign         = "PA9";
+GPIO5.$name                                 = "Motor";
+GPIO5.associatedPins.create(6);
+GPIO5.associatedPins[0].$name               = "PH1";
+GPIO5.associatedPins[0].pin.$assign         = "PA31";
+GPIO5.associatedPins[1].$name               = "PH2";
+GPIO5.associatedPins[1].pin.$assign         = "PB0";
+GPIO5.associatedPins[2].$name               = "nSLEEP1";
+GPIO5.associatedPins[2].pin.$assign         = "PB4";
+GPIO5.associatedPins[3].$name               = "nSLEEP2";
+GPIO5.associatedPins[3].pin.$assign         = "PB5";
+GPIO5.associatedPins[4].$name               = "nFault1";
+GPIO5.associatedPins[4].direction           = "INPUT";
+GPIO5.associatedPins[4].internalResistor    = "PULL_UP";
+GPIO5.associatedPins[4].pin.$assign         = "PB6";
+GPIO5.associatedPins[5].$name               = "nFault2";
+GPIO5.associatedPins[5].direction           = "INPUT";
+GPIO5.associatedPins[5].internalResistor    = "PULL_UP";
+GPIO5.associatedPins[5].pin.$assign         = "PB7";
 
 PWM1.timerStartTimer                    = true;
 PWM1.enableShadowLoad                   = true;
 PWM1.$name                              = "PWMA";
-PWM1.peripheral.$assign                 = "TIMA1";
-PWM1.peripheral.ccp0Pin.$assign         = "PA28";
-PWM1.peripheral.ccp1Pin.$assign         = "PA31";
+PWM1.peripheral.$assign                 = "TIMG6";
+PWM1.peripheral.ccp0Pin.$assign         = "PA29";
+PWM1.peripheral.ccp1Pin.$assign         = "PA30";
 PWM1.PWM_CHANNEL_0.$name                = "ti_driverlib_pwm_PWMTimerCC0";
 PWM1.PWM_CHANNEL_0.dutyCycle            = 30;
 PWM1.PWM_CHANNEL_1.$name                = "ti_driverlib_pwm_PWMTimerCC1";
@@ -128,17 +126,17 @@ PWM1.ccp1PinConfig.$name                = "ti_driverlib_gpio_GPIOPinGeneric12";
 
 QEI1.$name                      = "QEI_0";
 QEI1.timerStartTimer            = true;
-QEI1.peripheral.$assign         = "TIMG8";
-QEI1.peripheral.ccp0Pin.$assign = "PA26";
-QEI1.peripheral.ccp1Pin.$assign = "PA27";
+QEI1.peripheral.$assign         = "TIMG9";
+QEI1.peripheral.ccp0Pin.$assign = "PB29";
+QEI1.peripheral.ccp1Pin.$assign = "PB30";
 QEI1.ccp0PinConfig.$name        = "ti_driverlib_gpio_GPIOPinGeneric2";
 QEI1.ccp1PinConfig.$name        = "ti_driverlib_gpio_GPIOPinGeneric3";
 
 QEI2.$name                      = "QEI_1";
 QEI2.timerStartTimer            = true;
-QEI2.peripheral.$assign         = "TIMG9";
-QEI2.peripheral.ccp0Pin.$assign = "PB29";
-QEI2.peripheral.ccp1Pin.$assign = "PB30";
+QEI2.peripheral.$assign         = "TIMG8";
+QEI2.peripheral.ccp0Pin.$assign = "PC6";
+QEI2.peripheral.ccp1Pin.$assign = "PA22";
 QEI2.ccp0PinConfig.$name        = "ti_driverlib_gpio_GPIOPinGeneric9";
 QEI2.ccp1PinConfig.$name        = "ti_driverlib_gpio_GPIOPinGeneric10";
 
@@ -149,8 +147,8 @@ SPI1.polarity                   = "1";
 SPI1.phase                      = "1";
 SPI1.sclkPinConfig.$name        = "ti_driverlib_gpio_GPIOPinGeneric4";
 SPI1.mosiPinConfig.$name        = "ti_driverlib_gpio_GPIOPinGeneric5";
-SPI1.peripheral.sclkPin.$assign = "PB3";
-SPI1.peripheral.mosiPin.$assign = "PB2";
+SPI1.peripheral.sclkPin.$assign = "PB18";
+SPI1.peripheral.mosiPin.$assign = "PB17";
 
 SPI2.$name                      = "SPI_1";
 SPI2.frameFormat                = "MOTO3";
@@ -245,7 +243,10 @@ ProjectConfig.migrationCondition = true;
  * version of the tool will not impact the pinmux you originally saw.  These lines can be completely deleted in order to
  * re-solve from scratch.
  */
+QEI1.peripheral.$suggestSolution                 = "TIMG9";
+QEI2.peripheral.$suggestSolution                 = "TIMG8";
 SPI1.peripheral.$suggestSolution                 = "SPI0";
+TIMER1.peripheral.$suggestSolution               = "TIMG7";
 UART1.peripheral.$suggestSolution                = "UART0";
 UART3.DMA_CHANNEL_RX.peripheral.$suggestSolution = "DMA_CH5";
 UART3.DMA_CHANNEL_TX.peripheral.$suggestSolution = "DMA_CH2";

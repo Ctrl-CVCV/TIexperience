@@ -46,6 +46,15 @@ virtualFolder:
         - path: ../BSP/Encoder/encoder.c
         - path: ../BSP/Encoder/pid.c
       folders: []
+    - name: LCD
+      files:
+        - path: ../../Car2/BSP/SPI0_LCD/lcd.c
+        - path: ../../Car2/BSP/SPI0_LCD/lcd.h
+        - path: ../../Car2/BSP/SPI0_LCD/lcd_init.c
+        - path: ../../Car2/BSP/SPI0_LCD/lcd_init.h
+        - path: ../../Car2/BSP/SPI0_LCD/lcdfont.h
+        - path: ../../Car2/BSP/SPI0_LCD/pic.h
+      folders: []
 dependenceList: []
 outDir: build
 miscInfo:
@@ -113,10 +122,12 @@ targets:
         - RTE/_G3519_UART
         - ../BSP/IMU
         - ../BSP/IMU/AHRS
+        - ../../Car2/BSP/SPI0_LCD
       libList:
         - ../BSP/IMU/AHRS
         - ../BSP/IMU/ICM45686
-    excludeList: []
+    excludeList:
+      - <virtual_root>/OLED
     settings:
       debugger: cortex-debug
     toolchain: AC6

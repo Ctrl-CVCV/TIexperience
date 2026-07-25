@@ -1,8 +1,8 @@
 /*
  * encoder.c - Dual QEI encoder speed measurement
  *
- * QEI_0 = TIMG8 (PHA=PA26, PHB=PA27) → Motor A
- * QEI_1 = TIMG9 (PHA=PB29, PHB=PB30) → Motor B
+ * QEI_0 = TIMG9 (PHA=PB29, PHB=PB30) → Motor A
+ * QEI_1 = TIMG8 (PHA=PC6,  PHB=PA22) → Motor B
  *
  * TIMER_12 (TIMG12, 1000Hz) drives sampling at 500Hz (every 2 ticks).
  *
@@ -67,7 +67,7 @@ void TIMER_12_INST_IRQHandler(void)
 
         /* RPM = delta * 60 * 500 / 2000 = delta * 15 */
         g_rpm_a = (int16_t)((int32_t)delta_a * 15);  /* positive = fwd */
-        g_rpm_b = (int16_t)((int32_t)delta_b * 15);
+        g_rpm_b = -(int16_t)((int32_t)delta_b * 15);
 
         /* EMA filter: α=0.1 (old*0.9 + new*0.1), τ≈45ms — heavy smoothing */
         g_rpm_filt_a += ((g_rpm_a - g_rpm_filt_a) * 13) >> 7;
