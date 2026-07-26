@@ -129,12 +129,22 @@ bool uart4_dma_send(const uint8_t *data, uint16_t len)
     return true;
 }
 
-/* ========== UART3 (DMA_CH6) ========== */
+/* ========== UART3 (DMA_CH6, PB12=TX PB13=RX, 115200 baud) ========== */
 
 #define UART_3_DMA_CHAN_ID   (6)
 
 void uart3_dma_init(void)
 {
+    /* Disable, reconfigure, re-enable.
+     * SysConfig set UART3 to 9600 baud, no DMA, no FIFO. Override to 115200. */
+    DL_UART_Main_disable(UART_3_INST);
+
+    DL_UART_Main_setBaudRateDivisor(UART_3_INST, 43, 26); /* 115200 @ 80MHz */
+    DL_UART_Main_enableFIFOs(UART_3_INST);
+    DL_UART_Main_enableDMATransmitEvent(UART_3_INST);
+
+    DL_UART_Main_enable(UART_3_INST);
+
     DL_DMA_Config cfg = {
         .transferMode  = DL_DMA_SINGLE_TRANSFER_MODE,
         .extendedMode  = DL_DMA_NORMAL_MODE,

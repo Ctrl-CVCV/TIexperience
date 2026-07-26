@@ -9,27 +9,29 @@
 #include "pid.h"
 #include "BSP/UART_DMA/uart_dma.h"
 #include "BSP/SPI0_LCD/lcd.h"
+#include "BSP/liner/liner.h"
 
 /* ========== PID Parameters (TUNE HERE) ========== */
-#define PID_A_KP   0.30f
-#define PID_A_KI   0.00f
-#define PID_A_KD   0.00f
+#define PID_A_KP   0.05f
+#define PID_A_KI   0.035f
+#define PID_A_KD   0.0f
 
-#define PID_B_KP   0.30f
-#define PID_B_KI   0.00f
+#define PID_B_KP   0.05f
+#define PID_B_KI   0.035f
 #define PID_B_KD   0.00f
 
 /* ========== Output Limit (50% duty cycle = 500) ========== */
 #define PWM_LIMIT  500
 
-/* ========== Speed Setpoints ========== */
-volatile int16_t g_setpoint_a = 1500;
-volatile int16_t g_setpoint_b = 1500;
+/* ========== Liner PID (line-position PD) ========== */
+#define LINER_PID_KP   0.5f
+#define LINER_PID_KI   0.0f
+#define LINER_PID_KD   0.0f
 
 /* ========== Internals ========== */
 volatile uint32_t nowtime;
 volatile bool     g_ctrl_tick = false;
-static PID_Controller pid_rpma, pid_rpmb;
+static PID_Controller pid_rpma, pid_rpmb, pid_liner;
 static float g_pwm_a, g_pwm_b = 0.0f;
 float g_pwm_af, g_pwm_bf = 0.0f;
 static char   g_msg[80];
@@ -87,7 +89,15 @@ int main(void)
 
     /* Motor init AFTER LCD */
     motor_init();
+    motor_a_run(0);
+    motor_b_run(0);
 
+    /* Liner init: ISR computes target_speed_rpm, main loop PID tracks */
+    liner_init();
+    PID_Init(&pid_liner, LINER_PID_KP, LINER_PID_KI, LINER_PID_KD, 1.0f);
+    liner_set_pid(&pid_liner);
+    liner_resume();  /* enable liner_control2 in ISR */
+    liner_start();   /* TIMG14 @ 200Hz */
     /* TIMER_7: 500Hz */
     {
         DL_TimerG_stopCounter(TIMER_7_INST);
@@ -108,15 +118,13 @@ int main(void)
 
     while (1) {
         /* Wait for 500Hz tick, keep reading fresh RPMs */
-        while (!g_ctrl_tick) {
-            rpm_a = encoder_a_get_rpm_filt();
-            rpm_b = encoder_b_get_rpm_filt();
-        }
+        while (!g_ctrl_tick) { /* spin */ }
+        rpm_a = encoder_a_get_rpm();
+        rpm_b = encoder_b_get_rpm();
         g_ctrl_tick = false;
-
-        /* PID control — once per tick (500Hz), result = absolute PWM */
-        g_pwm_af += PID_Update(&pid_rpma, (float)g_setpoint_a, (float)rpm_a, g_dt);
-        g_pwm_bf += PID_Update(&pid_rpmb, (float)g_setpoint_b, (float)rpm_b, g_dt);
+        /*PID speed control �?track liner target RPM */
+        g_pwm_af += PID_Update(&pid_rpma, target_speed_rpm1, (float)rpm_a, g_dt);
+        g_pwm_bf += PID_Update(&pid_rpmb, target_speed_rpm2, (float)rpm_b, g_dt);
         if (g_pwm_af > PWM_LIMIT)
             g_pwm_af = PWM_LIMIT;
         if (g_pwm_af < -PWM_LIMIT)
@@ -127,9 +135,11 @@ int main(void)
             g_pwm_bf = -PWM_LIMIT;
         g_pwm_a = (int16_t)g_pwm_af;
         g_pwm_b = (int16_t)g_pwm_bf;
+
+        /* Motor output: PID PWM */
         motor_a_run(g_pwm_a);
         motor_b_run(g_pwm_b);
-
+        
         /* UART telemetry: pwm_a,pwm_b,rpm_a,rpm_b */
         if (!uart3_dma_is_busy()) {
             p = g_msg;
@@ -143,22 +153,59 @@ int main(void)
             *p++ = '\n';
             uart3_dma_send((const uint8_t *)g_msg, (uint16_t)(p - g_msg));
         }
-
-        /* LCD: show RPM */
+#if 0
+        /* LCD: all display updates @ 20Hz (every 25 ticks) */
         {
-            char buf[16];
-            p = itoa(buf, rpm_a); *p = '\0';
-            LCD_ShowString(0, 66, (const u8 *)"A rpm:", WHITE, BLACK, 16, 0);
-            LCD_Fill(80, 66, 180, 82, BLACK);
-            LCD_ShowString(80, 66, (const u8 *)buf, WHITE, BLACK, 16, 0);
-            p = itoa(buf, rpm_b); *p = '\0';
-            LCD_ShowString(0, 88, (const u8 *)"B rpm:", WHITE, BLACK, 16, 0);
-            LCD_Fill(80, 88, 180, 104, BLACK);
-            LCD_ShowString(80, 88, (const u8 *)buf, WHITE, BLACK, 16, 0);
-            p = itoa(buf, (int16_t)encoder_get_isr_count()); *p = '\0';
-            LCD_ShowString(0, 110, (const u8 *)"ISR:", WHITE, BLACK, 16, 0);
-            LCD_Fill(40, 110, 100, 126, BLACK);
-            LCD_ShowString(40, 110, (const u8 *)buf, WHITE, BLACK, 16, 0);
+            static uint8_t lcd_tick;
+            if (++lcd_tick >= 25) {
+                lcd_tick = 0;
+                char buf[20];
+
+                /* --- Encoder debug --- */
+                p = itoa(buf, rpm_a); *p++ = ' '; p = itoa(p, rpm_b); *p = '\0';
+                LCD_ShowString(0, 54, (const u8 *)"RPM:", WHITE, BLACK, 16, 0);
+                LCD_Fill(48, 54, 160, 70, BLACK);
+                LCD_ShowString(48, 54, (const u8 *)buf, WHITE, BLACK, 16, 0);
+
+                p = itoa(buf, (int16_t)target_speed_rpm1); *p++ = ' ';
+                p = itoa(p, (int16_t)target_speed_rpm2); *p = '\0';
+                LCD_ShowString(0, 72, (const u8 *)"TGT:", WHITE, BLACK, 16, 0);
+                LCD_Fill(48, 72, 160, 88, BLACK);
+                LCD_ShowString(48, 72, (const u8 *)buf, WHITE, BLACK, 16, 0);
+
+                p = itoa(buf, encoder_get_delta_a()); *p++ = ' ';
+                p = itoa(p, encoder_get_delta_b()); *p = '\0';
+                LCD_ShowString(0, 90, (const u8 *)"dlt:", WHITE, BLACK, 16, 0);
+                LCD_Fill(64, 90, 200, 106, BLACK);
+                LCD_ShowString(64, 90, (const u8 *)buf, WHITE, BLACK, 16, 0);
+
+                p = itoa(buf, (int16_t)encoder_get_isr_count()); *p = '\0';
+                LCD_ShowString(0, 108, (const u8 *)"ISR:", WHITE, BLACK, 16, 0);
+                LCD_Fill(40, 108, 100, 124, BLACK);
+                LCD_ShowString(40, 108, (const u8 *)buf, WHITE, BLACK, 16, 0);
+
+                /* --- Liner sensor states --- */
+                LCD_ShowString(0, 130, (const u8 *)"LR:", WHITE, BLACK, 16, 0);
+                for (int i = 0; i < 8; i++) {
+                    /* display: 1=line(green), 0=no-line(gray) �?inverted vs raw */
+                    char ch = liner_states[i] ? '0' : '1';
+                    LCD_ShowChar(24 + (u16)i * 12, 130, (u8)ch,
+                                 liner_states[i] ? GRAY : GREEN, BLACK, 12, 0);
+                }
+                /* Filtered position */
+                {
+                    char dbuf[12];
+                    int16_t ival = (int16_t)(ave_values_after_filtered * 1000.0f);
+                    char *dp2 = itoa(dbuf, ival);
+                    *dp2 = '\0';
+                    LCD_Fill(0, 148, 160, 164, BLACK);
+                    LCD_ShowString(0, 148, (const u8 *)dbuf, WHITE, BLACK, 16, 0);
+                }
+                if (is_lost_line) {
+                    LCD_ShowString(120, 148, (const u8 *)"LOST", RED, BLACK, 16, 0);
+                }
+            }
         }
+#endif
     }
 }

@@ -15,9 +15,8 @@ typedef struct {
     float ki;           // 积分系数
     float kd;           // 微分系数
 
-    float integral;         // 积分项
-    float prev_error;       // e(k-1)
-    float prev_prev_error;  // e(k-2)，增量式D项用
+    float integral;         // 积分累加
+    float prev_error;       // e(k-1)，微分用
 
     float output_limit; // 输出限幅
     float integral_limit; // 积分限幅

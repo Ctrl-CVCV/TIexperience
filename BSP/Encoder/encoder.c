@@ -26,6 +26,14 @@ static uint16_t g_last_b;
 static uint8_t  g_tick;
 static volatile uint16_t g_isr_count;
 
+/* ISR debug: exposed for LCD display */
+volatile int16_t  g_dbg_delta_a;
+volatile int16_t  g_dbg_delta_b;
+volatile uint16_t g_dbg_curr_a;
+volatile uint16_t g_dbg_curr_b;
+volatile uint16_t g_dbg_last_a;
+volatile uint16_t g_dbg_last_b;
+
 /* SysConfig sets TIMG12 as ONE_SHOT. Convert to periodic for encoder. */
 void encoder_init(void)
 {
@@ -65,6 +73,11 @@ void TIMER_12_INST_IRQHandler(void)
         delta_a = (int16_t)(curr_a - g_last_a);
         delta_b = (int16_t)(curr_b - g_last_b);
 
+        /* ISR debug snapshot */
+        g_dbg_curr_a = curr_a; g_dbg_curr_b = curr_b;
+        g_dbg_last_a = g_last_a; g_dbg_last_b = g_last_b;
+        g_dbg_delta_a = delta_a; g_dbg_delta_b = delta_b;
+
         g_last_a = curr_a;
         g_last_b = curr_b;
 
@@ -75,9 +88,13 @@ void TIMER_12_INST_IRQHandler(void)
         g_rpm_a = (int16_t)((int32_t)delta_a * 15);  /* positive = fwd */
         g_rpm_b = -(int16_t)((int32_t)delta_b * 15);
 
-        /* EMA filter: α=0.1 (old*0.9 + new*0.1), τ≈45ms — heavy smoothing */
-        g_rpm_filt_a += ((g_rpm_a - g_rpm_filt_a) * 13) >> 7;
-        g_rpm_filt_b += ((g_rpm_b - g_rpm_filt_b) * 13) >> 7;
+        /* EMA filter: filt = filt + (raw - filt) * 13 / 128 */
+        {
+            int16_t diff_a = g_rpm_a - g_rpm_filt_a;
+            int16_t diff_b = g_rpm_b - g_rpm_filt_b;
+            g_rpm_filt_a = (int16_t)((int32_t)g_rpm_filt_a + ((int32_t)diff_a * 13) / 128);
+            g_rpm_filt_b = (int16_t)((int32_t)g_rpm_filt_b + ((int32_t)diff_b * 13) / 128);
+        }
         break;
 
     default:
@@ -92,3 +109,11 @@ int16_t encoder_b_get_rpm_filt(void)   { return g_rpm_filt_b; }
 int32_t encoder_a_get_pos(void)   { return g_pos_a; }
 int32_t encoder_b_get_pos(void)   { return g_pos_b; }
 uint16_t encoder_get_isr_count(void) { return g_isr_count; }
+uint16_t encoder_get_raw_a(void)     { return (uint16_t)QEI_0_INST->COUNTERREGS.CTR; }
+uint16_t encoder_get_raw_b(void)     { return (uint16_t)QEI_1_INST->COUNTERREGS.CTR; }
+int16_t  encoder_get_delta_a(void)   { return g_dbg_delta_a; }
+int16_t  encoder_get_delta_b(void)   { return g_dbg_delta_b; }
+uint16_t encoder_get_curr_a(void)    { return g_dbg_curr_a; }
+uint16_t encoder_get_curr_b(void)    { return g_dbg_curr_b; }
+int16_t  encoder_get_raw_rpm_a(void) { return g_rpm_a; }
+int16_t  encoder_get_raw_rpm_b(void) { return g_rpm_b; }

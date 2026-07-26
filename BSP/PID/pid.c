@@ -13,7 +13,6 @@ void PID_Init(PID_Controller* pid, float kp, float ki, float kd, float output_li
 
     pid->integral = 0.0f;
     pid->prev_error = 0.0f;
-    pid->prev_prev_error = 0.0f;
     pid->last_time = 0;
 }
 
@@ -30,36 +29,46 @@ void PID_Reset(PID_Controller* pid)
 {
     pid->integral = 0.0f;
     pid->prev_error = 0.0f;
-    pid->prev_prev_error = 0.0f;
     pid->last_time = 0;
 }
 
-// 增量式PID更新，返回Δu，调用方用 u += Δu 累加
+// 位置式PID更新，返回绝对u，调用方用 u = PID_Update(...)
 float PID_Update(PID_Controller* pid, float setpoint, float measurement, float dt)
 {
     float error = setpoint - measurement;
+    float derivative;
+    float output;
 
     /* 死区 */
     if (fabsf(error) < pid->dead_zone) {
         error = 0.0f;
     }
 
-    /*
-     * 增量式（速度形式）：
-     *   Δu = Kp*(e(k)-e(k-1)) + Ki*e(k)*dt + Kd*(e(k)-2*e(k-1)+e(k-2))/dt
-     * 稳态时 error→0, Δe→0, Δ²e→0 → Δu=0, PWM保持不变
-     */
-    float p_delta = pid->kp * (error - pid->prev_error);
-    float i_delta = pid->ki * error * dt;
-    float d_delta = 0.0f;
+    /* 积分累加并限幅 */
+    pid->integral += error * dt;
+    if (pid->integral > pid->integral_limit)
+        pid->integral = pid->integral_limit;
+    else if (pid->integral < -pid->integral_limit)
+        pid->integral = -pid->integral_limit;
+
+    /* 微分：基于measurement变化（-dM/dt），避免setpoint突变冲击 */
+    derivative = 0.0f;
     if (dt > 0.0001f) {
-        d_delta = pid->kd * (error - 2.0f * pid->prev_error
-                             + pid->prev_prev_error) / dt;
+        derivative = (pid->prev_error - error) / dt;
     }
 
-    /* 保存历史 */
-    pid->prev_prev_error = pid->prev_error;
     pid->prev_error = error;
 
-    return p_delta + i_delta + d_delta;
+    /* 位置式：u = Kp*e + Ki*∫e·dt + Kd*de/dt */
+    output = pid->kp * error
+           + pid->ki * pid->integral
+           + pid->kd * derivative;
+
+    /* 输出限幅 */
+    if (output > pid->output_limit)
+        output = pid->output_limit;
+    else if (output < -pid->output_limit)
+        output = -pid->output_limit;
+
+    return output;
 }

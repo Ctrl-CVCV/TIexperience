@@ -35,4 +35,18 @@ int32_t encoder_b_get_pos(void);
 /* Debug: ISR fire count (every 1ms tick) */
 uint16_t encoder_get_isr_count(void);
 
+/* Debug: raw QEI counter register values */
+uint16_t encoder_get_raw_a(void);
+uint16_t encoder_get_raw_b(void);
+
+/* Debug: ISR internal values (delta, curr) */
+int16_t  encoder_get_delta_a(void);
+int16_t  encoder_get_delta_b(void);
+uint16_t encoder_get_curr_a(void);
+uint16_t encoder_get_curr_b(void);
+
+/* Debug: unfiltered RPM (before EMA) */
+int16_t encoder_get_raw_rpm_a(void);
+int16_t encoder_get_raw_rpm_b(void);
+
 #endif

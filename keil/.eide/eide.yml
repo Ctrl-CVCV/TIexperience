@@ -47,16 +47,20 @@ virtualFolder:
       folders: []
     - name: LCD
       files:
-        - path: ../../Car2/BSP/SPI0_LCD/lcd.c
-        - path: ../../Car2/BSP/SPI0_LCD/lcd.h
-        - path: ../../Car2/BSP/SPI0_LCD/lcd_init.c
-        - path: ../../Car2/BSP/SPI0_LCD/lcd_init.h
-        - path: ../../Car2/BSP/SPI0_LCD/lcdfont.h
-        - path: ../../Car2/BSP/SPI0_LCD/pic.h
+        - path: ../BSP/SPI0_LCD/lcd.c
+        - path: ../BSP/SPI0_LCD/lcd.h
+        - path: ../BSP/SPI0_LCD/lcd_init.c
+        - path: ../BSP/SPI0_LCD/lcd_init.h
+        - path: ../BSP/SPI0_LCD/lcdfont.h
+        - path: ../BSP/SPI0_LCD/pic.h
       folders: []
     - name: PID
       files:
         - path: ../BSP/PID/pid.c
+      folders: []
+    - name: Liner
+      files:
+        - path: ../BSP/liner/liner.c
       folders: []
 dependenceList: []
 outDir: build
@@ -126,6 +130,8 @@ targets:
         - ../BSP/IMU
         - ../BSP/IMU/AHRS
         - ../BSP/PID
+        - ../BSP
+        - ../BSP/liner
       libList:
         - ../BSP/IMU/AHRS
         - ../BSP/IMU/ICM45686
@@ -147,7 +153,7 @@ targets:
           beforeBuildTasks:
             - name: SysConfig
               abortAfterFailed: true
-              command: cmd.exe /C D:\TI\CCS2051\ccs\utils\sysconfig_1.27.1\sysconfig_cli.bat --product "D:\TI\CCS2051\mspm0_sdk_2_10_00_04\.metadata\product.json" --device MSPM0G3519 --package "LQFP-80(PN)" --script "F:\05_1_UART\project.syscfg" --output "F:\05_1_UART"
+              command: cmd.exe /C D:\TI\CCS2051\ccs\utils\sysconfig_1.27.1\sysconfig_cli.bat --product "D:\TI\CCS2051\mspm0_sdk_2_10_00_04\.metadata\product.json" --device MSPM0G3519 --package "LQFP-80(PN)" --script "F:\TIexperience\project.syscfg" --output "F:\TIexperience"
               disable: false
               stopBuildAfterFailed: true
           c/cpp-compiler:
