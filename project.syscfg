@@ -21,6 +21,7 @@ const GPIO4  = GPIO.addInstance();
 const GPIO5  = GPIO.addInstance();
 const PWM    = scripting.addModule("/ti/driverlib/PWM", {}, false);
 const PWM1   = PWM.addInstance();
+const PWM2   = PWM.addInstance();
 const QEI    = scripting.addModule("/ti/driverlib/QEI", {}, false);
 const QEI1   = QEI.addInstance();
 const QEI2   = QEI.addInstance();
@@ -67,11 +68,15 @@ Board.peripheral.$assign          = "DEBUGSS";
 Board.peripheral.swclkPin.$assign = "PA20";
 Board.peripheral.swdioPin.$assign = "PA19";
 
-GPIO2.$name                              = "Key";
-GPIO2.associatedPins[0].$name            = "User";
-GPIO2.associatedPins[0].direction        = "INPUT";
-GPIO2.associatedPins[0].internalResistor = "PULL_UP";
-GPIO2.associatedPins[0].pin.$assign      = "PB31";
+GPIO2.$name                                 = "Key";
+GPIO2.associatedPins[0].$name               = "User";
+GPIO2.associatedPins[0].direction           = "INPUT";
+GPIO2.associatedPins[0].internalResistor    = "PULL_UP";
+GPIO2.associatedPins[0].ioStructure         = "SDW";
+GPIO2.associatedPins[0].assignedPort        = "PORTA";
+GPIO2.associatedPins[0].assignedPortSegment = "Upper";
+GPIO2.associatedPins[0].assignedPin         = "17";
+GPIO2.associatedPins[0].pin.$assign         = "PA17";
 
 GPIO3.$name                         = "LCD";
 GPIO3.associatedPins.create(3);
@@ -83,7 +88,7 @@ GPIO3.associatedPins[2].$name       = "RES";
 GPIO3.associatedPins[2].pin.$assign = "PC0";
 
 GPIO4.$name                                 = "Motor";
-GPIO4.associatedPins.create(7);
+GPIO4.associatedPins.create(8);
 GPIO4.associatedPins[0].$name               = "PH1";
 GPIO4.associatedPins[0].pin.$assign         = "PA31";
 GPIO4.associatedPins[1].$name               = "PH2";
@@ -104,6 +109,13 @@ GPIO4.associatedPins[6].$name               = "IMU";
 GPIO4.associatedPins[6].assignedPort        = "PORTC";
 GPIO4.associatedPins[6].assignedPortSegment = "Lower";
 GPIO4.associatedPins[6].pin.$assign         = "PC4";
+GPIO4.associatedPins[7].$name               = "IMU_INT1";
+GPIO4.associatedPins[7].ioStructure         = "SD";
+GPIO4.associatedPins[7].assignedPort        = "PORTC";
+GPIO4.associatedPins[7].assignedPortSegment = "Lower";
+GPIO4.associatedPins[7].assignedPin         = "2";
+GPIO4.associatedPins[7].direction           = "INPUT";
+GPIO4.associatedPins[7].pin.$assign         = "PC2";
 
 GPIO5.$name                          = "Liner";
 GPIO5.associatedPins.create(4);
@@ -144,6 +156,16 @@ PWM1.ccp1PinConfig.onlyInternalResistor = scripting.forceWrite(false);
 PWM1.ccp1PinConfig.passedPeripheralType = scripting.forceWrite("Digital");
 PWM1.ccp1PinConfig.$name                = "ti_driverlib_gpio_GPIOPinGeneric12";
 
+PWM2.$name                      = "PWM_0";
+PWM2.timerStartTimer            = true;
+PWM2.peripheral.$assign         = "TIMA0";
+PWM2.peripheral.ccp0Pin.$assign = "PA8";
+PWM2.PWM_CHANNEL_0.$name        = "ti_driverlib_pwm_PWMTimerCC2";
+PWM2.PWM_CHANNEL_0.dutyCycle    = 15;
+PWM2.PWM_CHANNEL_1.$name        = "ti_driverlib_pwm_PWMTimerCC3";
+PWM2.ccp0PinConfig.$name        = "ti_driverlib_gpio_GPIOPinGeneric19";
+PWM2.ccp1PinConfig.$name        = "ti_driverlib_gpio_GPIOPinGeneric20";
+
 QEI1.$name                      = "QEI_0";
 QEI1.timerStartTimer            = true;
 QEI1.peripheral.$assign         = "TIMG9";
@@ -167,6 +189,7 @@ SPI1.polarity                   = "1";
 SPI1.phase                      = "1";
 SPI1.sclkPinConfig.$name        = "ti_driverlib_gpio_GPIOPinGeneric4";
 SPI1.mosiPinConfig.$name        = "ti_driverlib_gpio_GPIOPinGeneric5";
+SPI1.peripheral.$assign         = "SPI0";
 SPI1.peripheral.sclkPin.$assign = "PB18";
 SPI1.peripheral.mosiPin.$assign = "PB17";
 
@@ -286,7 +309,7 @@ ProjectConfig.migrationCondition = true;
  * version of the tool will not impact the pinmux you originally saw.  These lines can be completely deleted in order to
  * re-solve from scratch.
  */
-SPI1.peripheral.$suggestSolution                 = "SPI0";
+PWM2.peripheral.ccp1Pin.$suggestSolution         = "PA1";
 UART1.peripheral.$suggestSolution                = "UART0";
 UART4.DMA_CHANNEL_RX.peripheral.$suggestSolution = "DMA_CH7";
 UART4.DMA_CHANNEL_TX.peripheral.$suggestSolution = "DMA_CH6";

@@ -15,6 +15,8 @@
 #include "../bsp.h"
 #include "ti_msp_dl_config.h"
 
+extern volatile uint32_t nowtime;
+
 #define LINER_TIMER      TIMER_0_INST
 #define LINER_TIMER_IRQN (TIMER_0_INST_INT_IRQN)
 
@@ -50,7 +52,7 @@ float target_speed_rpm2;
 
 static bool liner_paused;
 
-float liner_ref_rpm = 1000.0f;       /* base speed RPM */
+float liner_ref_rpm = 1500.0f;       /* base speed RPM */
 static PID_Controller* liner_pid;   /* liner PD controller */
 
 void liner_set_pid(PID_Controller* pid) { liner_pid = pid; }
@@ -382,6 +384,7 @@ void TIMER_0_INST_IRQHandler(void)
     case DL_TIMER_IIDX_ZERO:
         DL_TimerG_clearInterruptStatus(LINER_TIMER,
             DL_TIMERG_INTERRUPT_ZERO_EVENT);
+        nowtime += 5;  /* 200Hz → 5ms per tick, for IMU AHRS timing */
         Read_line();
         value_after_filtered();
         if (!liner_paused && liner_pid) {

@@ -103,6 +103,24 @@ bool SYSCFG_DL_SYSCTL_SYSPLL_init(void);
 #define GPIO_PWMA_C1_IOMUX_FUNC                       IOMUX_PINCM5_PF_TIMG6_CCP1
 #define GPIO_PWMA_C1_IDX                                     DL_TIMER_CC_1_INDEX
 
+/* Defines for PWM_0 */
+#define PWM_0_INST                                                         TIMA0
+#define PWM_0_INST_IRQHandler                                   TIMA0_IRQHandler
+#define PWM_0_INST_INT_IRQN                                     (TIMA0_INT_IRQn)
+#define PWM_0_INST_CLK_FREQ                                             80000000
+/* GPIO defines for channel 0 */
+#define GPIO_PWM_0_C0_PORT                                                 GPIOA
+#define GPIO_PWM_0_C0_PIN                                          DL_GPIO_PIN_8
+#define GPIO_PWM_0_C0_IOMUX                                      (IOMUX_PINCM19)
+#define GPIO_PWM_0_C0_IOMUX_FUNC                     IOMUX_PINCM19_PF_TIMA0_CCP0
+#define GPIO_PWM_0_C0_IDX                                    DL_TIMER_CC_0_INDEX
+/* GPIO defines for channel 1 */
+#define GPIO_PWM_0_C1_PORT                                                 GPIOA
+#define GPIO_PWM_0_C1_PIN                                          DL_GPIO_PIN_1
+#define GPIO_PWM_0_C1_IOMUX                                       (IOMUX_PINCM2)
+#define GPIO_PWM_0_C1_IOMUX_FUNC                      IOMUX_PINCM2_PF_TIMA0_CCP1
+#define GPIO_PWM_0_C1_IDX                                    DL_TIMER_CC_1_INDEX
+
 
 
 
@@ -283,11 +301,11 @@ bool SYSCFG_DL_SYSCTL_SYSPLL_init(void);
 
 
 /* Port definition for Pin Group Key */
-#define Key_PORT                                                         (GPIOB)
+#define Key_PORT                                                         (GPIOA)
 
-/* Defines for User: GPIOB.31 with pinCMx 68 on package pin 27 */
-#define Key_User_PIN                                            (DL_GPIO_PIN_31)
-#define Key_User_IOMUX                                           (IOMUX_PINCM68)
+/* Defines for User: GPIOA.17 with pinCMx 39 on package pin 54 */
+#define Key_User_PIN                                            (DL_GPIO_PIN_17)
+#define Key_User_IOMUX                                           (IOMUX_PINCM39)
 /* Defines for L1: GPIOB.19 with pinCMx 45 on package pin 60 */
 #define LED_L1_PORT                                                      (GPIOB)
 #define LED_L1_PIN                                              (DL_GPIO_PIN_19)
@@ -336,6 +354,10 @@ bool SYSCFG_DL_SYSCTL_SYSPLL_init(void);
 #define Motor_IMU_PORT                                                   (GPIOC)
 #define Motor_IMU_PIN                                            (DL_GPIO_PIN_4)
 #define Motor_IMU_IOMUX                                          (IOMUX_PINCM78)
+/* Defines for IMU_INT1: GPIOC.2 with pinCMx 76 on package pin 50 */
+#define Motor_IMU_INT1_PORT                                              (GPIOC)
+#define Motor_IMU_INT1_PIN                                       (DL_GPIO_PIN_2)
+#define Motor_IMU_INT1_IOMUX                                     (IOMUX_PINCM76)
 /* Defines for IN: GPIOC.9 with pinCMx 87 on package pin 66 */
 #define Liner_IN_PORT                                                    (GPIOC)
 #define Liner_IN_PIN                                             (DL_GPIO_PIN_9)
@@ -363,6 +385,7 @@ void SYSCFG_DL_SYSCTL_init(void);
 
 bool SYSCFG_DL_SYSCTL_SYSPLL_init(void);
 void SYSCFG_DL_PWMA_init(void);
+void SYSCFG_DL_PWM_0_init(void);
 void SYSCFG_DL_QEI_0_init(void);
 void SYSCFG_DL_QEI_1_init(void);
 void SYSCFG_DL_TIMER_7_init(void);

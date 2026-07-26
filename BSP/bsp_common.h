@@ -24,43 +24,36 @@
 #include <ti/driverlib/driverlib.h>
 #include <ti/driverlib/m0p/dl_core.h>
 
-#include "ti_msp_dl_config.h"
+#include "../ti_msp_dl_config.h"
 
 /*
  * UART_WF (UART4) — 未在 SysConfig 中配置，手动提供宏定义。
- *
- * 这些符号被 wb2_wifi.c 和 peripheral_test.c 引用。
- * 放在这里而非 ti_msp_dl_config.h 是为了避免 SysConfig 预构建覆盖。
  */
 #define UART_WF_INST            UART4
 #define UART_WF_BAUD_RATE       (115200U)
 
-/*
- * 毫秒级阻塞延时。
- *
- * 参数：
- * - ms：需要阻塞等待的毫秒数。
- *
- * 实现位置：
- * - 由 BSP/UART0/uart0.c 提供，公共声明放在这里便于 SPI、IMU、LCD 等底层模块使用。
- *
- * 使用约束：
- * - 该函数为忙等阻塞，不应在中断服务函数中调用。
- */
-void delay_ms(uint32_t ms);
+#define CPUCLK_FREQ_MHZ 80
+#define BSP_DELAY_MS_DEFINED
+
+static inline void delay_ms(uint32_t ms)
+{
+    while (ms--) {
+        delay_cycles(CPUCLK_FREQ_MHZ * 1000UL);
+    }
+}
+
+static inline void delay_us(uint32_t us)
+{
+    while (us--) {
+        delay_cycles(CPUCLK_FREQ_MHZ);
+    }
+}
 
 /*
- * 微秒级阻塞延时。
- *
- * 参数：
- * - us：需要阻塞等待的微秒数。
- *
- * 用途：
- * - IMU 官方驱动初始化、寄存器写入后的硬件稳定等待，以及 LCD 复位等短延时场景。
- *
- * 使用约束：
- * - 该函数为忙等阻塞，时间较长时会影响主循环实时性，不应在 ISR 中调用。
+ * IMU 引脚名映射 — SysConfig 生成的宏名为 Motor_IMU_*，
+ * LSM6DSV 驱动代码内部使用的是 IMU_PORT / IMU_CS_PIN。
  */
-void delay_us(uint32_t us);
+#define IMU_PORT    Motor_IMU_PORT
+#define IMU_CS_PIN  Motor_IMU_PIN
 
 #endif

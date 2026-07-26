@@ -29,9 +29,8 @@ virtualFolder:
         - path: ../BSP/SPI1/spi1.c
         - path: ../BSP/SPI1/spi1.h
         - path: ../BSP/IMU/basic_read_reg.c
-        - path: ../BSP/IMU/ICM45686/inv_imu_transport.c
-        - path: ../BSP/IMU/ICM45686/inv_imu_driver.c
-        - path: ../BSP/IMU/AHRS/IMU.c
+        - path: ../BSP/IMU/IMU/IMU.c
+        - path: ../BSP/IMU/LSM6DSV16X/lsm6dsv16x_reg.c
       folders: []
     - name: Motor
       files:
@@ -57,6 +56,11 @@ virtualFolder:
     - name: PID
       files:
         - path: ../BSP/PID/pid.c
+      folders: []
+    - name: Servo
+      files:
+        - path: ../BSP/Servo/servo.c
+        - path: ../BSP/Servo/servo.h
       folders: []
     - name: Liner
       files:
