@@ -32,4 +32,7 @@ static inline int16_t encoder_b_get_output_rpm(void) {
 int32_t encoder_a_get_pos(void);
 int32_t encoder_b_get_pos(void);
 
+/* Debug: ISR fire count (every 1ms tick) */
+uint16_t encoder_get_isr_count(void);
+
 #endif

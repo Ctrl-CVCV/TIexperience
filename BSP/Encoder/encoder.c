@@ -24,10 +24,14 @@ static volatile int16_t g_rpm_filt_b;
 static uint16_t g_last_a;
 static uint16_t g_last_b;
 static uint8_t  g_tick;
+static volatile uint16_t g_isr_count;
 
 /* SysConfig sets TIMG12 as ONE_SHOT. Convert to periodic for encoder. */
 void encoder_init(void)
 {
+    DL_TimerG_stopCounter(TIMER_12_INST);
+    DL_TimerG_clearInterruptStatus(TIMER_12_INST,
+        DL_TIMERG_INTERRUPT_ZERO_EVENT);
     DL_TimerG_TimerConfig cfg = {
         .period    = TIMER_12_INST_LOAD_VALUE,
         .timerMode = DL_TIMER_TIMER_MODE_PERIODIC,
@@ -37,6 +41,7 @@ void encoder_init(void)
     DL_TimerG_enableInterrupt(TIMER_12_INST, DL_TIMERG_INTERRUPT_ZERO_EVENT);
     NVIC_SetPriority(TIMER_12_INST_INT_IRQN, 1);
     NVIC_EnableIRQ(TIMER_12_INST_INT_IRQN);
+    DL_TimerG_enableClock(TIMER_12_INST);
 }
 
 /* TIMG12 ISR: fires at 1000Hz, samples encoders every other tick (500Hz) */
@@ -50,6 +55,7 @@ void TIMER_12_INST_IRQHandler(void)
         DL_TimerG_clearInterruptStatus(TIMER_12_INST,
             DL_TIMERG_INTERRUPT_ZERO_EVENT);
 
+        g_isr_count++;
         g_tick ^= 1;
         if (g_tick) break;   /* skip odd ticks → 500Hz */
 
@@ -85,3 +91,4 @@ int16_t encoder_a_get_rpm_filt(void)   { return g_rpm_filt_a; }
 int16_t encoder_b_get_rpm_filt(void)   { return g_rpm_filt_b; }
 int32_t encoder_a_get_pos(void)   { return g_pos_a; }
 int32_t encoder_b_get_pos(void)   { return g_pos_b; }
+uint16_t encoder_get_isr_count(void) { return g_isr_count; }

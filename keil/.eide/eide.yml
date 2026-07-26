@@ -44,7 +44,6 @@ virtualFolder:
     - name: Encoder
       files:
         - path: ../BSP/Encoder/encoder.c
-        - path: ../BSP/Encoder/pid.c
       folders: []
     - name: LCD
       files:
@@ -54,6 +53,10 @@ virtualFolder:
         - path: ../../Car2/BSP/SPI0_LCD/lcd_init.h
         - path: ../../Car2/BSP/SPI0_LCD/lcdfont.h
         - path: ../../Car2/BSP/SPI0_LCD/pic.h
+      folders: []
+    - name: PID
+      files:
+        - path: ../BSP/PID/pid.c
       folders: []
 dependenceList: []
 outDir: build
@@ -122,7 +125,7 @@ targets:
         - RTE/_G3519_UART
         - ../BSP/IMU
         - ../BSP/IMU/AHRS
-        - ../../Car2/BSP/SPI0_LCD
+        - ../BSP/PID
       libList:
         - ../BSP/IMU/AHRS
         - ../BSP/IMU/ICM45686
